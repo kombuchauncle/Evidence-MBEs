@@ -1,0 +1,33 @@
+name: Sync from Google Sheets
+
+on:
+  schedule:
+    # Runs every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Download CSV from Google Sheets
+        run: |
+          curl -L "${{ secrets.GOOGLE_SHEET_URL }}" -o mbe_questions.csv
+          
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code mbe_questions.csv || echo "changed=true" >> $GITHUB_OUTPUT
+          
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add mbe_questions.csv
+          git commit -m "Auto-sync: Update questions from Google Sheets $(date +'%Y-%m-%d %H:%M')"
+          git push
