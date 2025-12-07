@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mbe evidence question bank</title>
+    <style>
+        body {
+            background-color: #e6f2ff;
+            font-family: 'Times New Roman', Times, serif;
+            color: #000;
+            text-align: center;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: normal;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            font-weight: normal;
+            font-style: italic;
+            margin: 20px 0;
+        }
+        
+        .subtitle {
+            font-size: 0.95rem;
+            margin: 5px 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        
+        .center-text {
+            text-align: center;
+        }
+        
+        a {
+            color: #551a8b;
+            text-decoration: underline;
+        }
+        
+        a:visited {
+            color: #551a8b;
+        }
+        
+        a:hover {
+            color: #0000ee;
+        }
+        
+        .nav {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .nav a {
+            margin: 0 15px;
+        }
+        
+        .question-list {
+            margin: 30px 0;
+        }
+        
+        .question-card {
+            border: 1px solid #999;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fff;
+        }
+        
+        .question-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            margin: 15px 0;
+            font-size: 1.05rem;
+        }
+        
+        .choices {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .choice {
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        
+        .answer-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-left: 3px solid #551a8b;
+            display: none;
+        }
+        
+        .answer-section.visible {
+            display: block;
+        }
+        
+        .show-answer-btn {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.95rem;
+            margin-top: 10px;
+        }
+        
+        .show-answer-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .correct-indicator {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+            border: 1px solid #999;
+            margin: 10px 0;
+        }
+        
+        .filter-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #999;
+        }
+        
+        .stats {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 10px 0;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #999;
+            padding-top: 20px;
+        }
+        
+        select {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 5px;
+            border: 1px solid #999;
+        }
+        
+        .mode-toggle {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .mode-btn {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 10px 25px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0 5px;
+        }
+        
+        .mode-btn.active {
+            background: #551a8b;
+            color: #fff;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #addForm {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #999;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            font-family: 'Times New Roman', Times, serif;
+            padding: 8px;
+            border: 1px solid #999;
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+        }
+        
+        button[type="submit"] {
+            background: #551a8b;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+        }
+        
+        button[type="submit"]:hover {
+            background: #6b2a9b;
+        }
+    </style>
+</head>
+<body>
+    <h1>mbe evidence question bank</h1>
+    <p class="subtitle">santa clara university school of law</p>
+    <p class="subtitle" style="font-style: italic;">class of 2026 study tool</p>
+    
+    <div class="nav">
+        <a href="#" onclick="showMode('browse'); return false;">browse questions</a> |
+        <a href="#" onclick="showMode('add'); return false;">add new question</a> |
+        <a href="#" onclick="showMode('test'); return false;">generate practice test</a>
+    </div>
+    
+    <div class="container">
+        <div class="stats center-text" id="stats">
+            loading question bank...
+        </div>
+        
+        <!-- Browse Mode -->
+        <div id="browseMode">
+            <div class="filter-section">
+                <input type="text" class="search-box" id="searchBox" placeholder="search questions..." onkeyup="filterQuestions()">
+                <div style="margin-top: 10px;">
+                    <label>filter by source: </label>
+                    <select id="sourceFilter" onchange="filterQuestions()">
+                        <option value="">all sources</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="questionsList"></div>
+        </div>
+        
+        <!-- Add Mode -->
+        <div id="addMode" class="hidden">
+            <h2>add new question</h2>
+            <form id="addForm" onsubmit="addQuestion(event)">
+                <div class="form-group">
+                    <label>scenario (optional):</label>
+                    <textarea id="newScenario"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>question:</label>
+                    <textarea id="newQuestion" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>choice a:</label>
+                    <input type="text" id="newChoiceA" required>
+                </div>
+                <div class="form-group">
+                    <label>choice b:</label>
+                    <input type="text" id="newChoiceB" required>
+                </div>
+                <div class="form-group">
+                    <label>choice c:</label>
+                    <input type="text" id="newChoiceC" required>
+                </div>
+                <div class="form-group">
+                    <label>choice d:</label>
+                    <input type="text" id="newChoiceD" required>
+                </div>
+                <div class="form-group">
+                    <label>correct answer:</label>
+                    <select id="newCorrect" required>
+                        <option value="A">a</option>
+                        <option value="B">b</option>
+                        <option value="C">c</option>
+                        <option value="D">d</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>explanation:</label>
+                    <textarea id="newExplanation"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>source:</label>
+                    <input type="text" id="newSource" value="In-Class MBE">
+                </div>
+                <div class="form-group">
+                    <label>topic:</label>
+                    <input type="text" id="newTopic" value="Evidence">
+                </div>
+                <button type="submit">add question</button>
+            </form>
+        </div>
+        
+        <!-- Test Mode -->
+        <div id="testMode" class="hidden">
+            <h2>generate practice test</h2>
+            <div style="background: #fff; padding: 20px; border: 1px solid #999;">
+                <div class="form-group">
+                    <label>number of questions:</label>
+                    <input type="number" id="testSize" min="1" value="25">
+                </div>
+                <div class="form-group">
+                    <label>randomize order:</label>
+                    <select id="randomize">
+                        <option value="yes">yes</option>
+                        <option value="no">no</option>
+                    </select>
+                </div>
+                <button onclick="generateTest()" style="background: #551a8b; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Times New Roman', Times, serif;">generate test</button>
+            </div>
+            <div id="testPreview" style="margin-top: 20px;"></div>
+        </div>
+        
+        <div class="footer center-text">
+            <p>questions stored locally in your browser</p>
+            <p><a href="#" onclick="downloadCSV(); return false;">download as csv</a> | 
+               <a href="#" onclick="uploadCSV(); return false;">upload csv</a> | 
+               <a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">edit in google sheets</a></p>
+            <p style="margin-top: 20px; font-size: 0.8rem;">powered by authentic 90s technology<br>
+            last updated: december 2025</p>
+        </div>
+    </div>
+    
+    <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        // Load CSV data from GitHub or use embedded data
+        const CSV_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/mbe_questions.csv';
+        
+        let questionBank = [];
+        let filteredQuestions = [];
+        
+        // Initialize
+        loadQuestions();
+        
+        function loadQuestions() {
+            // Try to load from localStorage first
+            const saved = localStorage.getItem('mbeQuestions');
+            if (saved) {
+                questionBank = JSON.parse(saved);
+                renderQuestions();
+                updateStats();
+            } else {
+                // Load initial 62 questions
+                loadInitialQuestions();
+            }
+        }
+        
+        function loadInitialQuestions() {
+            // Embed initial question bank
+            fetch('mbe_questions.csv')
+                .then(response => response.text())
+                .then(csv => {
+                    Papa.parse(csv, {
+                        header: true,
+                        complete: function(results) {
+                            questionBank = results.data.filter(q => q.ID);
+                            saveQuestions();
+                            renderQuestions();
+                            updateStats();
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.log('Using embedded data');
+                    questionBank = INITIAL_QUESTIONS;
+                    saveQuestions();
+                    renderQuestions();
+                    updateStats();
+                });
+        }
+        
+        function saveQuestions() {
+            localStorage.setItem('mbeQuestions', JSON.stringify(questionBank));
+        }
+        
+        function updateStats() {
+            const sources = [...new Set(questionBank.map(q => q.Source))];
+            document.getElementById('stats').innerHTML = `
+                ${questionBank.length} total questions | ${sources.length} source(s)
+            `;
+            
+            // Update source filter
+            const sourceFilter = document.getElementById('sourceFilter');
+            sourceFilter.innerHTML = '<option value="">all sources</option>' +
+                sources.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+        
+        function renderQuestions() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            const sourceFilter = document.getElementById('sourceFilter').value;
+            
+            filteredQuestions = questionBank.filter(q => {
+                const matchesSearch = !search || 
+                    q.Question.toLowerCase().includes(search) ||
+                    (q.Scenario && q.Scenario.toLowerCase().includes(search)) ||
+                    q.Topic.toLowerCase().includes(search);
+                
+                const matchesSource = !sourceFilter || q.Source === sourceFilter;
+                
+                return matchesSearch && matchesSource;
+            });
+            
+            const html = filteredQuestions.map((q, idx) => `
+                <div class="question-card">
+                    <div class="question-header">${q.ID} | ${q.Source} | ${q.Topic}</div>
+                    ${q.Scenario ? `<p style="font-style: italic; color: #666;">${q.Scenario}</p>` : ''}
+                    <div class="question-text">${q.Question}</div>
+                    <div class="choices">
+                        <div class="choice">a. ${q.Choice_A}</div>
+                        <div class="choice">b. ${q.Choice_B}</div>
+                        <div class="choice">c. ${q.Choice_C}</div>
+                        <div class="choice">d. ${q.Choice_D}</div>
+                    </div>
+                    <button class="show-answer-btn" onclick="toggleAnswer(${idx})">show answer</button>
+                    <div class="answer-section" id="answer-${idx}">
+                        <p><span class="correct-indicator">correct answer: ${q.Correct_Answer}</span></p>
+                        ${q.Explanation ? `<p style="margin-top: 10px;">${q.Explanation}</p>` : '<p style="color: #999; font-style: italic;">no explanation added yet</p>'}
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('questionsList').innerHTML = html || '<p class="center-text">no questions match your search</p>';
+        }
+        
+        function toggleAnswer(idx) {
+            const answerDiv = document.getElementById(`answer-${idx}`);
+            answerDiv.classList.toggle('visible');
+        }
+        
+        function filterQuestions() {
+            renderQuestions();
+        }
+        
+        function showMode(mode) {
+            document.getElementById('browseMode').classList.add('hidden');
+            document.getElementById('addMode').classList.add('hidden');
+            document.getElementById('testMode').classList.add('hidden');
+            
+            document.getElementById(mode + 'Mode').classList.remove('hidden');
+        }
+        
+        function addQuestion(e) {
+            e.preventDefault();
+            
+            const newQ = {
+                ID: `Q${String(questionBank.length + 1).padStart(3, '0')}`,
+                Question: document.getElementById('newQuestion').value,
+                Scenario: document.getElementById('newScenario').value,
+                Choice_A: document.getElementById('newChoiceA').value,
+                Choice_B: document.getElementById('newChoiceB').value,
+                Choice_C: document.getElementById('newChoiceC').value,
+                Choice_D: document.getElementById('newChoiceD').value,
+                Correct_Answer: document.getElementById('newCorrect').value,
+                Explanation: document.getElementById('newExplanation').value,
+                Source: document.getElementById('newSource').value,
+                Topic: document.getElementById('newTopic').value
+            };
+            
+            questionBank.push(newQ);
+            saveQuestions();
+            updateStats();
+            
+            document.getElementById('addForm').reset();
+            alert('question added successfully!');
+            showMode('browse');
+            renderQuestions();
+        }
+        
+        function generateTest() {
+            const size = parseInt(document.getElementById('testSize').value);
+            const randomize = document.getElementById('randomize').value === 'yes';
+            
+            let questions = [...filteredQuestions];
+            
+            if (randomize) {
+                questions = questions.sort(() => Math.random() - 0.5);
+            }
+            
+            questions = questions.slice(0, Math.min(size, questions.length));
+            
+            const preview = questions.map((q, idx) => `
+                <p>${idx + 1}. ${q.Question} <span style="color: #666;">(${q.ID})</span></p>
+            `).join('');
+            
+            document.getElementById('testPreview').innerHTML = `
+                <div style="background: #fff; padding: 20px; border: 1px solid #999;">
+                    <h3>test preview (${questions.length} questions)</h3>
+                    ${preview}
+                    <button onclick="downloadTest(${JSON.stringify(questions).replace(/"/g, '&quot;')})" 
+                            style="background: #551a8b; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Times New Roman', Times, serif; margin-top: 15px;">
+                        download test & answer key
+                    </button>
+                </div>
+            `;
+        }
+        
+        function downloadTest(questions) {
+            let test = `MBE EVIDENCE PRACTICE TEST\n`;
+            test += `Generated: ${new Date().toLocaleDateString()}\n`;
+            test += `Total Questions: ${questions.length}\n\n`;
+            test += `${'='.repeat(60)}\n\n`;
+            
+            questions.forEach((q, idx) => {
+                test += `${idx + 1}. ${q.Question}\n\n`;
+                if (q.Scenario) test += `${q.Scenario}\n\n`;
+                test += `a. ${q.Choice_A}\n`;
+                test += `b. ${q.Choice_B}\n`;
+                test += `c. ${q.Choice_C}\n`;
+                test += `d. ${q.Choice_D}\n\n`;
+                test += `${'-'.repeat(60)}\n\n`;
+            });
+            
+            downloadFile(test, `mbe_test_${Date.now()}.txt`);
+            
+            // Answer key
+            let answers = `MBE EVIDENCE ANSWER KEY\n`;
+            answers += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+            answers += `${'='.repeat(60)}\n\n`;
+            
+            questions.forEach((q, idx) => {
+                answers += `${idx + 1}. ${q.Correct_Answer} (${q.ID})\n`;
+                if (q.Explanation) answers += `   ${q.Explanation}\n`;
+                answers += `\n`;
+            });
+            
+            setTimeout(() => downloadFile(answers, `mbe_answers_${Date.now()}.txt`), 500);
+        }
+        
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+        
+        function downloadCSV() {
+            const csv = Papa.unparse(questionBank);
+            downloadFile(csv, `mbe_questions_${Date.now()}.csv`);
+        }
+        
+        function uploadCSV() {
+            document.getElementById('fileInput').click();
+        }
+        
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            Papa.parse(file, {
+                header: true,
+                complete: function(results) {
+                    if (confirm('this will replace all current questions. continue?')) {
+                        questionBank = results.data.filter(q => q.ID);
+                        saveQuestions();
+                        renderQuestions();
+                        updateStats();
+                        alert('questions loaded successfully!');
+                    }
+                }
+            });
+        }
+        
+        // Embedded initial data (your 62 questions)
+        const INITIAL_QUESTIONS = [];
+    </script>
+</body>
+</html>
