@@ -11,7 +11,7 @@ This repository contains:
 
 ## Live Study Tool
 
-Access the study tool at: https://kombuchauncle.github.io/Evidence-MBEs/mbe-study-tool.html
+Access the study tool at: https://kombuchauncle.github.io/Evidence-MBEs/study-tool.html
 
 ## How It Works
 
