@@ -653,6 +653,10 @@
         const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1bt4aADO8QQ8Px6NwLEKt10f4DsyEDBw6L83-x53TyGbu3kgbef_Sbm0v0sP4Q/exec';
         
+        // Use a CORS proxy to bypass browser restrictions
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const PROXIED_APPS_SCRIPT_URL = CORS_PROXY + APPS_SCRIPT_URL;
+        
         // State management
         let allQuestions = [];
         let currentQuiz = [];
@@ -901,21 +905,34 @@
             console.log('Explanation:', explanation.substring(0, 100));
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
+                // Create form data
+                const formData = new FormData();
+                formData.append('question', question.Question);
+                formData.append('explanation', explanation);
+                
+                // Use CORS proxy
+                const response = await fetch(PROXIED_APPS_SCRIPT_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        question: question.Question,
-                        explanation: explanation
-                    })
+                    body: formData
                 });
                 
-                // Parse the response
-                const result = await response.json();
-                console.log('Response from Apps Script:', result);
+                // Get the response as text
+                const responseText = await response.text();
+                console.log('Raw response from Apps Script:', responseText);
                 
+                // Try to parse as JSON
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Failed to parse response as JSON:', e);
+                    result = {
+                        success: false,
+                        message: 'Invalid response from server: ' + responseText.substring(0, 100)
+                    };
+                }
+                
+                console.log('Parsed response:', result);
                 return result;
                 
             } catch (err) {
