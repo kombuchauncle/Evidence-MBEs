@@ -228,8 +228,82 @@
             content: " ▼";
         }
         
-        .show-answer-btn.show-answer:after {
-            content: " ▲";
+        .quiz-question-card {
+            border: 1px solid #999;
+            padding: 25px;
+            margin: 20px auto;
+            background: #fff;
+            max-width: 800px;
+            border-left: 4px solid #551a8b;
+        }
+        
+        .quiz-q-number {
+            font-weight: bold;
+            color: #551a8b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-q-scenario {
+            color: #666;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .quiz-q-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 15px 0 20px 0;
+            line-height: 1.5;
+        }
+        
+        .quiz-q-choices {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 2px solid #ccc;
+        }
+        
+        .quiz-q-choice {
+            margin: 8px 0;
+            padding: 5px;
+        }
+        
+        .quiz-show-answer-btn {
+            background: #fff;
+            border: 1px solid #551a8b;
+            color: #551a8b;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-show-answer-btn:hover {
+            background: #551a8b;
+            color: #fff;
+        }
+        
+        .quiz-answer-reveal {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-left: 3px solid #2d5016;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .quiz-answer-reveal.visible {
+            display: block;
+        }
+        
+        .quiz-answer-label {
+            color: #2d5016;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         
         .quiz-nav {
@@ -432,25 +506,14 @@
         <div id="quizMode">
             <div class="quiz-header">
                 <div class="quiz-progress">practice test</div>
-                <div class="quiz-counter">
-                    <span id="currentQuestion">1</span> / <span id="totalQuestions">10</span>
-                </div>
-                <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">new quiz</button>
+                <p style="margin: 15px 0; color: #666; font-size: 0.95rem;">
+                    <strong>10 randomly generated questions</strong> from the library.<br>
+                    <a href="#" onclick="switchMode('library'); return false;">view all questions in the library →</a>
+                </p>
+                <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">generate new quiz</button>
             </div>
             
-            <div class="quiz-container">
-                <div id="scenarioContainer" class="scenario"></div>
-                <div id="questionContainer" class="question-text"></div>
-                <div id="choicesContainer" class="choices"></div>
-                <button id="showAnswerBtn" class="show-answer-btn hidden-answer" onclick="toggleAnswer()">show answer</button>
-                <div id="answerContainer" class="answer-reveal"></div>
-            </div>
-            
-            <div class="quiz-nav">
-                <button id="prevBtn" onclick="previousQuestion()" disabled>← previous</button>
-                <span id="navInfo" style="text-align: center; flex: 1;"></span>
-                <button id="nextBtn" onclick="nextQuestion()">next →</button>
-            </div>
+            <div id="quizQuestionsContainer"></div>
         </div>
         
         <!-- LIBRARY MODE -->
@@ -518,28 +581,25 @@
             })
                 .then(response => {
                     console.log('Response status:', response.status);
-                    console.log('Response headers:', response.headers);
                     if (!response.ok) {
-                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                        throw new Error(`HTTP ${response.status}`);
                     }
                     return response.text();
                 })
                 .then(csv => {
-                    console.log('CSV loaded, length:', csv.length);
-                    console.log('First 500 chars:', csv.substring(0, 500));
+                    console.log('CSV loaded successfully, length:', csv.length);
                     Papa.parse(csv, {
                         header: true,
                         skipEmptyLines: true,
                         complete: function(results) {
                             console.log('Parsed questions:', results.data.length);
-                            console.log('First question:', results.data[0]);
                             allQuestions = results.data.filter(q => q.Question && q.Question.trim());
                             console.log('Filtered questions:', allQuestions.length);
                             if (allQuestions.length > 0) {
-                                console.log('Loading from CSV - found', allQuestions.length, 'questions');
+                                console.log('✓ Loaded from GitHub CSV - ' + allQuestions.length + ' questions');
                                 initializeApp();
                             } else {
-                                console.log('No questions found in CSV, loading sample data');
+                                console.log('No questions in CSV, using sample data');
                                 loadSampleData();
                             }
                         },
@@ -550,14 +610,14 @@
                     });
                 })
                 .catch(err => {
-                    console.error('Fetch error details:', err.message);
-                    console.log('Loading sample data as fallback');
+                    console.error('Fetch error:', err.message);
+                    console.log('Loading sample data as fallback...');
                     loadSampleData();
                 });
         }
         
         function loadSampleData() {
-            allQuestions = [
+            console.log('Loading sample data...');
                 {
                     Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
                     Scenario: "In a prosecution for aggravated battery, a police officer testified that when he arrested the defendant, he took a knife from the defendant and delivered it to the medical examiner. The medical examiner testified that the knife blade was consistent with the victim's wound but admitted on cross-examination that any number of other knives could also have caused the wound.",
@@ -669,6 +729,7 @@
                     Source: "In-Class MBE"
                 }
             ];
+            console.log('✓ Sample data loaded - ' + allQuestions.length + ' questions');
             initializeApp();
         }
         
@@ -686,92 +747,57 @@
         }
         
         function generateNewQuiz() {
-            // Shuffle and pick 10 random questions
-            const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-            currentQuiz = shuffled.slice(0, 10);
-            currentQuizIndex = 0;
-            answeredQuestions = {};
-            displayQuestion();
-        }
-        
-        function displayQuestion() {
-            if (currentQuiz.length === 0) return;
+            console.log('Generating new quiz...');
+            console.log('Total questions available:', allQuestions.length);
             
-            const q = currentQuiz[currentQuizIndex];
-            
-            // Scenario
-            const scenarioContainer = document.getElementById('scenarioContainer');
-            scenarioContainer.innerHTML = q.Scenario ? `<p>${q.Scenario}</p>` : '';
-            
-            // Question
-            document.getElementById('questionContainer').innerHTML = q.Question;
-            
-            // Choices
-            const choicesContainer = document.getElementById('choicesContainer');
-            choicesContainer.innerHTML = `
-                <div class="choice" onclick="selectChoice('A')"><span class="choice-letter">a.</span> ${q.Choice_A}</div>
-                <div class="choice" onclick="selectChoice('B')"><span class="choice-letter">b.</span> ${q.Choice_B}</div>
-                <div class="choice" onclick="selectChoice('C')"><span class="choice-letter">c.</span> ${q.Choice_C}</div>
-                <div class="choice" onclick="selectChoice('D')"><span class="choice-letter">d.</span> ${q.Choice_D}</div>
-            `;
-            
-            // Answer section
-            const answerContainer = document.getElementById('answerContainer');
-            answerContainer.innerHTML = `
-                <div class="correct-answer">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
-                ${q.Explanation ? `<div class="explanation"><div class="explanation-title">explanation:</div>${q.Explanation}</div>` : ''}
-            `;
-            answerContainer.classList.remove('visible');
-            
-            // Reset show answer button
-            const showAnswerBtn = document.getElementById('showAnswerBtn');
-            showAnswerBtn.classList.remove('show-answer');
-            showAnswerBtn.classList.add('hidden-answer');
-            
-            // Update counter and nav
-            document.getElementById('currentQuestion').innerHTML = currentQuizIndex + 1;
-            document.getElementById('totalQuestions').innerHTML = currentQuiz.length;
-            
-            // Update nav buttons
-            document.getElementById('prevBtn').disabled = currentQuizIndex === 0;
-            document.getElementById('nextBtn').disabled = currentQuizIndex === currentQuiz.length - 1;
-            
-            // Update info
-            document.getElementById('navInfo').innerHTML = 
-                currentQuizIndex === currentQuiz.length - 1 
-                    ? '<em>last question</em>' 
-                    : '';
-            
-            // Scroll to top
-            document.querySelector('.quiz-container').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function toggleAnswer() {
-            const answerContainer = document.getElementById('answerContainer');
-            const btn = document.getElementById('showAnswerBtn');
-            answerContainer.classList.toggle('visible');
-            btn.classList.toggle('hidden-answer');
-            btn.classList.toggle('show-answer');
-            answeredQuestions[currentQuizIndex] = true;
-        }
-        
-        function selectChoice(choice) {
-            // Optional: highlight selected choice
-            console.log(`Selected: ${choice}`);
-        }
-        
-        function nextQuestion() {
-            if (currentQuizIndex < currentQuiz.length - 1) {
-                currentQuizIndex++;
-                displayQuestion();
+            // Fisher-Yates shuffle for true randomness
+            const shuffled = allQuestions.map(q => ({...q}));
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
+            
+            currentQuiz = shuffled.slice(0, Math.min(10, shuffled.length));
+            console.log('Generated quiz with', currentQuiz.length, 'questions');
+            console.log('Questions:', currentQuiz.map(q => q.Question.substring(0, 50)));
+            
+            displayAllQuestions();
         }
         
-        function previousQuestion() {
-            if (currentQuizIndex > 0) {
-                currentQuizIndex--;
-                displayQuestion();
+        function displayAllQuestions() {
+            const container = document.getElementById('quizQuestionsContainer');
+            
+            if (currentQuiz.length === 0) {
+                container.innerHTML = '<p class="center-text">No questions available</p>';
+                return;
             }
+            
+            const html = currentQuiz.map((q, idx) => `
+                <div class="quiz-question-card">
+                    <div class="quiz-q-number">Question ${idx + 1} of ${currentQuiz.length}</div>
+                    ${q.Scenario ? `<div class="quiz-q-scenario">${q.Scenario}</div>` : ''}
+                    <div class="quiz-q-text">${q.Question}</div>
+                    <div class="quiz-q-choices">
+                        <div class="quiz-q-choice"><strong>a.</strong> ${q.Choice_A}</div>
+                        <div class="quiz-q-choice"><strong>b.</strong> ${q.Choice_B}</div>
+                        <div class="quiz-q-choice"><strong>c.</strong> ${q.Choice_C}</div>
+                        <div class="quiz-q-choice"><strong>d.</strong> ${q.Choice_D}</div>
+                    </div>
+                    <button class="quiz-show-answer-btn" onclick="toggleQuizAnswer(this)">show answer</button>
+                    <div class="quiz-answer-reveal" data-question="${idx}">
+                        <div class="quiz-answer-label">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
+                        ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function toggleQuizAnswer(btn) {
+            const answerDiv = btn.nextElementSibling;
+            answerDiv.classList.toggle('visible');
+            btn.textContent = answerDiv.classList.contains('visible') ? 'hide answer' : 'show answer';
         }
         
         // Library Mode
@@ -803,8 +829,8 @@
             }
             
             const html = libraryFilteredQuestions.map((q, idx) => `
-                <div class="question-card" onclick="toggleCardExpand(this)">
-                    <div class="question-card-header">
+                <div class="question-card">
+                    <div class="question-card-header" onclick="toggleLibraryQuestion(this)">
                         <div>
                             <div class="question-card-title">${q.Question}</div>
                             <div class="question-card-meta">${q.Source || 'Unknown Source'}</div>
@@ -819,7 +845,8 @@
                             <div class="card-choice"><strong>c.</strong> ${q.Choice_C}</div>
                             <div class="card-choice"><strong>d.</strong> ${q.Choice_D}</div>
                         </div>
-                        <div class="card-answer">
+                        <button class="show-answer-btn" onclick="toggleLibraryAnswer(event)">show answer</button>
+                        <div class="card-answer" style="display: none;">
                             <div class="card-answer-label">answer: ${q.Correct_Answer}</div>
                             ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
                         </div>
@@ -832,13 +859,31 @@
                 `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
         }
         
-        function toggleCardExpand(card) {
-            // Close other cards
-            document.querySelectorAll('.question-card').forEach(c => {
-                if (c !== card) c.classList.remove('expanded');
-            });
-            // Toggle this card
+        function toggleLibraryQuestion(header) {
+            const card = header.closest('.question-card');
             card.classList.toggle('expanded');
+            
+            // Reset answer visibility when collapsing
+            if (!card.classList.contains('expanded')) {
+                const answerDiv = card.querySelector('.card-answer');
+                const btn = card.querySelector('.show-answer-btn');
+                answerDiv.style.display = 'none';
+                btn.textContent = 'show answer';
+            }
+        }
+        
+        function toggleLibraryAnswer(event) {
+            event.stopPropagation();
+            const btn = event.target;
+            const answerDiv = btn.nextElementSibling;
+            
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+                btn.textContent = 'hide answer';
+            } else {
+                answerDiv.style.display = 'none';
+                btn.textContent = 'show answer';
+            }
         }
         
         function switchMode(mode) {
