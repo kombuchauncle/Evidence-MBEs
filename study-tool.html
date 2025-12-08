@@ -90,6 +90,32 @@
             color: #fff;
         }
         
+        /* Status indicator */
+        .status-bar {
+            background: #fff;
+            border: 1px solid #999;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        .status-bar.saving {
+            background: #fff9e6;
+            color: #996600;
+        }
+        
+        .status-bar.saved {
+            background: #e6ffe6;
+            color: #006600;
+        }
+        
+        .status-bar.error {
+            background: #ffe6e6;
+            color: #660000;
+        }
+        
         /* Quiz Mode */
         #quizMode {
             animation: fadeIn 0.3s ease;
@@ -306,6 +332,75 @@
             margin-bottom: 10px;
         }
         
+        .explanation-input-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-left: 3px solid #551a8b;
+        }
+        
+        .explanation-input-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #551a8b;
+        }
+        
+        .explanation-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .explanation-input:focus {
+            outline: none;
+            border-color: #551a8b;
+            box-shadow: 0 0 5px rgba(85, 26, 139, 0.3);
+        }
+        
+        .explanation-save-btn {
+            background: #fff;
+            border: 1px solid #551a8b;
+            color: #551a8b;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .explanation-save-btn:hover {
+            background: #551a8b;
+            color: #fff;
+        }
+        
+        .explanation-save-btn.saving {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .save-indicator {
+            font-size: 0.85rem;
+            margin-left: 10px;
+            display: none;
+        }
+        
+        .save-indicator.saving {
+            display: inline;
+            color: #996600;
+        }
+        
+        .save-indicator.saved {
+            display: inline;
+            color: #006600;
+        }
+        
         .quiz-nav {
             display: flex;
             justify-content: space-between;
@@ -495,6 +590,8 @@
     <h1>mbe evidence question bank</h1>
     <p class="subtitle">made by grace kantrow</p>
     
+    <div id="statusBar" class="status-bar" style="display: none;"></div>
+    
     <div class="container">
         <!-- Navigation -->
         <div class="nav">
@@ -550,74 +647,87 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
+        // Configuration
+        const SHEET_ID = '1WYZ5grBXcYZSXDhozYvHh74HRcvxQfsUXt2twjp7cV8';
+        const SHEET_TAB_ID = '1962900808';
+        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1bt4aADO8QQ8Px6NwLEKt10f4DsyEDBw6L83-x53TyGbu3kgbef_Sbm0v0sP4Q/exec';
+        
         // State management
         let allQuestions = [];
         let currentQuiz = [];
         let currentQuizIndex = 0;
         let answeredQuestions = {};
         let libraryFilteredQuestions = [];
+        let sheetsAuthToken = null;
         
-        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
-        
-        // Initialize on load - try multiple ways
+        // Initialize on load
         if (document.readyState !== 'loading') {
-            console.log('Document already loaded, initializing immediately');
-            loadQuestions();
+            initializeApp();
         } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOMContentLoaded event fired');
-                loadQuestions();
-            });
+            document.addEventListener('DOMContentLoaded', initializeApp);
         }
         
-        function loadQuestions() {
-            console.log('Attempting to load from:', CSV_URL);
+        async function initializeApp() {
+            console.log('Initializing app...');
             
-            fetch(CSV_URL, {
-                mode: 'cors',
-                headers: {
-                    'Accept': 'text/csv'
-                }
-            })
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return response.text();
-                })
-                .then(csv => {
-                    console.log('CSV loaded successfully, length:', csv.length);
+            // Try to authenticate with Google Sheets
+            await authenticateGoogleSheets();
+            
+            // Load questions from CSV
+            await loadQuestions();
+            
+            // Set up UI
+            updateSourceFilter();
+            generateNewQuiz();
+            updateFooter();
+        }
+        
+        async function authenticateGoogleSheets() {
+            // For now, we'll use a simple approach:
+            // The explanation updates will be batched and sent via a backend service
+            // For this demo, we'll log what would be sent
+            console.log('Google Sheets authentication configured');
+            console.log('Sheet ID:', SHEET_ID);
+        }
+        
+        async function loadQuestions() {
+            console.log('Loading questions from:', CSV_URL);
+            
+            try {
+                const response = await fetch(CSV_URL, {
+                    mode: 'cors',
+                    headers: { 'Accept': 'text/csv' }
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const csv = await response.text();
+                return new Promise((resolve) => {
                     Papa.parse(csv, {
                         header: true,
                         skipEmptyLines: true,
                         complete: function(results) {
-                            console.log('Parsed questions:', results.data.length);
                             allQuestions = results.data.filter(q => q.Question && q.Question.trim());
-                            console.log('Filtered questions:', allQuestions.length);
-                            if (allQuestions.length > 0) {
-                                console.log('✓ Loaded from GitHub CSV - ' + allQuestions.length + ' questions');
-                                initializeApp();
-                            } else {
-                                console.log('No questions in CSV, using sample data');
-                                loadSampleData();
-                            }
+                            console.log('✓ Loaded', allQuestions.length, 'questions');
+                            resolve();
                         },
                         error: function(err) {
-                            console.error('Papa Parse error:', err);
+                            console.error('Parse error:', err);
                             loadSampleData();
+                            resolve();
                         }
                     });
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err.message);
-                    console.log('Loading sample data as fallback...');
-                    loadSampleData();
                 });
+            } catch (err) {
+                console.error('Fetch error:', err);
+                loadSampleData();
+            }
         }
         
         function loadSampleData() {
             console.log('Loading sample data...');
+            allQuestions = [
                 {
                     Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
                     Scenario: "In a prosecution for aggravated battery, a police officer testified that when he arrested the defendant, he took a knife from the defendant and delivered it to the medical examiner. The medical examiner testified that the knife blade was consistent with the victim's wound but admitted on cross-examination that any number of other knives could also have caused the wound.",
@@ -639,104 +749,9 @@
                     Correct_Answer: "B",
                     Explanation: "Relevance is defined as having any tendency to make a fact more or less probable.",
                     Source: "In-Class MBE"
-                },
-                {
-                    Question: "Is the plaintiff's proposed testimony admissible?",
-                    Scenario: "A plaintiff sued for injuries arising from a car accident, claiming a back injury. At trial, she wishes to testify that before the accident she had never had any problems with her back.",
-                    Choice_A: "No, because the plaintiff has not been qualified as an expert.",
-                    Choice_B: "No, because the plaintiff's pain could have been caused by factors arising after the accident, such as an injury at work.",
-                    Choice_C: "Yes, because it is probative evidence of the plaintiff's injury.",
-                    Choice_D: "Yes, because the testimony of parties is not subject to the lay opinion rule.",
-                    Correct_Answer: "C",
-                    Explanation: "Lay testimony about the plaintiff's prior physical condition is relevant and probative to damages.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Should the photograph be admitted over the defendant's objection?",
-                    Scenario: "A plaintiff, who had been injured in an automobile collision, sued for damages. The defendant denied negligence and denied that the plaintiff's injuries were severe. At trial, the plaintiff has offered in evidence a color photograph of himself made from a videotape taken by a television news crew at the scene of the collision. The plaintiff has demonstrated that the videotape has since been routinely reused by the television station and that the footage of the plaintiff was erased. The photograph shows the plaintiff moments after the collision, with his bloodied head protruding at a grotesque angle through the broken windshield of his car.",
-                    Choice_A: "No, because the plaintiff has failed to establish that a duplicate could not be found.",
-                    Choice_B: "No, because the plaintiff has failed to produce the original videotape or a duplicate.",
-                    Choice_C: "Yes, because a photograph that establishes a disputed fact cannot be excluded as prejudicial.",
-                    Choice_D: "Yes, because it tends to prove a controverted fact.",
-                    Correct_Answer: "D",
-                    Explanation: "A photograph is admissible if it tends to prove a controverted fact, even if prejudicial.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Is the witness's testimony admissible?",
-                    Scenario: "In a suit based on a will, the distribution of $1 million depends upon whether the wife survived her husband when both died in the crash of a small airplane. An applicable statute provides that, for purposes of distributing an estate after a common disaster, there is a rebuttable presumption that neither spouse survived the other. A witness has been called to testify that as she approached the plane she heard what she thought was a woman's voice saying, 'I'm dying,' although by the time the husband and wife were removed from the wreckage they were both dead.",
-                    Choice_A: "No, because the matter is governed by the presumption that neither spouse survived the other.",
-                    Choice_B: "No, because the witness's testimony is too speculative to support a finding.",
-                    Choice_C: "Yes, because it is relevant and not otherwise prohibited.",
-                    Choice_D: "Yes, because the hearsay rule does not apply to statements by decedents in actions to determine rights under a will.",
-                    Correct_Answer: "C",
-                    Explanation: "A rebuttable presumption may be overcome by relevant evidence.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Should the court admit this evidence?",
-                    Scenario: "A defendant's house was destroyed by fire, and she was charged with arson. To prove that the defendant had a motive to burn down her house, the government offered evidence that the defendant had fully insured the house and its contents.",
-                    Choice_A: "No, because evidence of insurance is not admissible on the issue of whether the insured acted wrongfully.",
-                    Choice_B: "No, because the probative value of the evidence of insurance on the issue of whether the defendant intentionally burned her house down is substantially outweighed by the dangers of unfair prejudice and confusion of the jury.",
-                    Choice_C: "Yes, because any conduct of a party to the case is admissible when offered against the party.",
-                    Choice_D: "Yes, because evidence of insurance on the house has a tendency to show that the defendant had a motive to burn down the house.",
-                    Correct_Answer: "D",
-                    Explanation: "FRE 411 excludes evidence of insurance, but this may be permitted to show ownership or control.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Is the banker's testimony admissible?",
-                    Scenario: "A company sued the defendant, its former vice president, for return of $230,000 that had been embezzled during the previous two years. Called by the company as an adverse witness, the defendant testified that his annual salary had been $75,000, and he denied the embezzlement. The company calls a banker as a witness to show that, during the two-year period, the defendant had deposited $250,000 in his bank account.",
-                    Choice_A: "No, because its prejudicial effect substantially outweighs its probative value.",
-                    Choice_B: "No, because the deposits could have come from legitimate sources.",
-                    Choice_C: "Yes, as circumstantial evidence of the defendant's guilt.",
-                    Choice_D: "Yes, to impeach the defendant.",
-                    Correct_Answer: "C",
-                    Explanation: "Circumstantial evidence is admissible, and inconsistency with defendant's testimony supports its admission.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Is the testimony concerning the wife's intoxication admissible?",
-                    Scenario: "A man sued an auto manufacturer for his wife's death, claiming that a defective steering mechanism on the family car caused it to veer off the road and hit a tree when his wife was driving. The auto manufacturer claims that the steering mechanism was damaged in the collision and offers testimony that the deceased wife was intoxicated at the time of the accident.",
-                    Choice_A: "No, because it is improper to prove character evidence by specific conduct.",
-                    Choice_B: "No, because it is substantially more prejudicial than probative.",
-                    Choice_C: "Yes, as proper evidence of the wife's character.",
-                    Choice_D: "Yes, to provide an alternate explanation of the accident's cause.",
-                    Correct_Answer: "D",
-                    Explanation: "Evidence of an alternate cause is admissible even if it reflects negatively on the plaintiff.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Is the jail employee's testimony admissible?",
-                    Scenario: "A defendant is on trial for kidnapping. The victim has testified that one of the kidnappers referred to the other as 'Speed.' The prosecutor calls a jail employee to testify that, while the defendant was in jail awaiting trial, other inmates addressed the defendant as 'Speed.'",
-                    Choice_A: "No, because it is hearsay not within any exception.",
-                    Choice_B: "No, because it is substantially more prejudicial than probative.",
-                    Choice_C: "Yes, as circumstantial evidence that the defendant was one of the kidnappers.",
-                    Choice_D: "Yes, to support the truthfulness of the victim.",
-                    Correct_Answer: "C",
-                    Explanation: "Circumstantial evidence of identity through a nickname is admissible.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "What is the strongest basis for an objection to the admission of the photographs?",
-                    Scenario: "A woman sued a delivery driver for injuries sustained during a car collision. The woman called her treating physician to testify as to the nature and extent of her injuries. The woman now seeks to introduce several color printouts of photographs taken on a smartphone at the accident scene by a witness. The photographs depict the gruesome nature of the woman's injuries.",
-                    Choice_A: "The photographs are not relevant in light of the physician's testimony.",
-                    Choice_B: "The photographs' probative value is substantially outweighed by the danger of unfair prejudice.",
-                    Choice_C: "The photographs violate the best evidence rule.",
-                    Choice_D: "The woman did not take the photographs and therefore cannot authenticate them.",
-                    Correct_Answer: "B",
-                    Explanation: "Under FRE 403, gruesome photographs may be excluded despite relevance if prejudicial effect substantially outweighs probative value.",
-                    Source: "In-Class MBE"
                 }
             ];
-            console.log('✓ Sample data loaded - ' + allQuestions.length + ' questions');
-            initializeApp();
-        }
-        
-        function initializeApp() {
-            updateSourceFilter();
-            generateNewQuiz();
-            updateFooter();
+            console.log('✓ Sample data loaded');
         }
         
         function updateSourceFilter() {
@@ -747,10 +762,6 @@
         }
         
         function generateNewQuiz() {
-            console.log('Generating new quiz...');
-            console.log('Total questions available:', allQuestions.length);
-            
-            // Fisher-Yates shuffle for true randomness
             const shuffled = allQuestions.map(q => ({...q}));
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -758,9 +769,6 @@
             }
             
             currentQuiz = shuffled.slice(0, Math.min(10, shuffled.length));
-            console.log('Generated quiz with', currentQuiz.length, 'questions');
-            console.log('Questions:', currentQuiz.map(q => q.Question.substring(0, 50)));
-            
             displayAllQuestions();
         }
         
@@ -788,6 +796,22 @@
                         <div class="quiz-answer-label">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
                         ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
                     </div>
+                    
+                    <!-- EXPLANATION INPUT SECTION -->
+                    <div class="explanation-input-section">
+                        <div class="explanation-input-label">add your explanation:</div>
+                        <textarea 
+                            class="explanation-input" 
+                            id="explanation-input-${idx}"
+                            placeholder="Write your own explanation or notes for this question..."
+                            data-question-index="${idx}"
+                        >${q.UserExplanation || ''}</textarea>
+                        <button 
+                            class="explanation-save-btn" 
+                            onclick="saveExplanation(${idx})"
+                        >save to sheets</button>
+                        <span class="save-indicator" id="save-indicator-${idx}"></span>
+                    </div>
                 </div>
             `).join('');
             
@@ -798,6 +822,120 @@
             const answerDiv = btn.nextElementSibling;
             answerDiv.classList.toggle('visible');
             btn.textContent = answerDiv.classList.contains('visible') ? 'hide answer' : 'show answer';
+        }
+        
+        async function saveExplanation(questionIndex) {
+            const textarea = document.getElementById(`explanation-input-${questionIndex}`);
+            const explanation = textarea.value.trim();
+            const question = currentQuiz[questionIndex];
+            const indicator = document.getElementById(`save-indicator-${questionIndex}`);
+            const btn = textarea.nextElementSibling;
+            
+            if (!explanation) {
+                showStatus('Please write an explanation before saving', 'error');
+                return;
+            }
+            
+            // Show saving state
+            btn.classList.add('saving');
+            btn.disabled = true;
+            indicator.textContent = 'saving...';
+            indicator.classList.add('saving');
+            
+            try {
+                // Send to Google Sheets via our backend
+                const result = await updateGoogleSheet(question, explanation);
+                
+                if (result.success) {
+                    // Update UI
+                    indicator.classList.remove('saving');
+                    indicator.classList.add('saved');
+                    indicator.textContent = '✓ saved to sheets';
+                    
+                    // Save locally too
+                    question.UserExplanation = explanation;
+                    
+                    // Disable the textarea and button after successful save
+                    textarea.disabled = true;
+                    btn.disabled = true;
+                    btn.textContent = 'saved ✓';
+                    
+                    setTimeout(() => {
+                        indicator.classList.remove('saved');
+                        indicator.textContent = '';
+                    }, 3000);
+                    
+                    showStatus(result.message, 'saved');
+                } else {
+                    // Explanation already exists
+                    indicator.classList.remove('saving');
+                    indicator.classList.add('error');
+                    indicator.textContent = '✗ field not empty';
+                    showStatus(result.message, 'error');
+                    
+                    setTimeout(() => {
+                        indicator.classList.remove('error');
+                        indicator.textContent = '';
+                    }, 4000);
+                }
+            } catch (err) {
+                console.error('Error saving:', err);
+                indicator.classList.remove('saving');
+                indicator.classList.add('error');
+                indicator.textContent = '✗ save failed';
+                showStatus('Error saving explanation. Please try again.', 'error');
+                
+                setTimeout(() => {
+                    indicator.classList.remove('error');
+                    indicator.textContent = '';
+                }, 3000);
+            } finally {
+                btn.classList.remove('saving');
+                btn.disabled = false;
+            }
+        }
+        
+        async function updateGoogleSheet(question, explanation) {
+            console.log('Saving to Google Sheets via Apps Script...');
+            console.log('Question:', question.Question.substring(0, 100));
+            console.log('Explanation:', explanation.substring(0, 100));
+            
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question: question.Question,
+                        explanation: explanation
+                    })
+                });
+                
+                // Parse the response
+                const result = await response.json();
+                console.log('Response from Apps Script:', result);
+                
+                return result;
+                
+            } catch (err) {
+                console.error('Error sending to Apps Script:', err);
+                return {
+                    success: false,
+                    message: 'Network error: ' + err.message
+                };
+            }
+        }
+        
+        function showStatus(message, type) {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.textContent = message;
+            statusBar.className = `status-bar ${type}`;
+            statusBar.style.display = 'block';
+            
+            setTimeout(() => {
+                statusBar.style.display = 'none';
+            }, 4000);
         }
         
         // Library Mode
@@ -863,7 +1001,6 @@
             const card = header.closest('.question-card');
             card.classList.toggle('expanded');
             
-            // Reset answer visibility when collapsing
             if (!card.classList.contains('expanded')) {
                 const answerDiv = card.querySelector('.card-answer');
                 const btn = card.querySelector('.show-answer-btn');
@@ -887,11 +1024,9 @@
         }
         
         function switchMode(mode) {
-            // Update buttons
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Update views
             document.getElementById('quizMode').classList.add('hidden');
             document.getElementById('libraryMode').classList.add('hidden');
             
