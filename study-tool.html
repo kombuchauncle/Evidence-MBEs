@@ -302,28 +302,19 @@
         loadQuestions();
         
         function loadQuestions() {
-            // Try to load from localStorage first
-            const saved = localStorage.getItem('mbeQuestions');
-            if (saved) {
-                questionBank = JSON.parse(saved);
-                renderQuestions();
-                updateStats();
-            } else {
-                // Load initial 62 questions
-                loadInitialQuestions();
-            }
+            // Always load fresh from GitHub CSV
+            loadInitialQuestions();
         }
         
         function loadInitialQuestions() {
-            // Embed initial question bank
-            fetch('mbe_questions.csv')
+            // Load from GitHub
+            fetch(CSV_URL)
                 .then(response => response.text())
                 .then(csv => {
                     Papa.parse(csv, {
                         header: true,
                         complete: function(results) {
                             questionBank = results.data.filter(q => q.ID);
-                            saveQuestions();
                             renderQuestions();
                             updateStats();
                         }
