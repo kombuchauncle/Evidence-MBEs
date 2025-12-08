@@ -494,7 +494,7 @@
         let answeredQuestions = {};
         let libraryFilteredQuestions = [];
         
-        const CSV_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/questions.csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQO6F1Nsq-Hb1pHoy-14qThBwskNAz2hhVnJ5gzPhwMiXxJHLQ70Kg0n-thpegNVxSHWwald9sz5V6s/pub?gid=0&single=true&output=csv';
         
         // Initialize on load
         window.addEventListener('DOMContentLoaded', function() {
@@ -522,7 +522,6 @@
         }
         
         function loadSampleData() {
-            // You'll replace this with your actual questions
             allQuestions = [
                 {
                     Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
@@ -532,10 +531,108 @@
                     Choice_C: "Yes, because the medical examiner could not state the probability that the wound was caused by the defendant's knife.",
                     Choice_D: "Yes, because the probative value is substantially outweighed by the danger of unfair prejudice.",
                     Correct_Answer: "B",
-                    Explanation: "Evidence that has insufficient probative value may be excluded.",
+                    Explanation: "Under FRE 403, evidence may be excluded if its probative value is substantially outweighed by the danger of unfair prejudice.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Which of the following standards of admissibility should the court apply to evidence proffered as relevant to prove whether a contract was formed?",
+                    Scenario: "In a civil action for breach of an oral contract, the defendant denied having entered into a contract with the plaintiff, although he admitted that he had discussed doing so.",
+                    Choice_A: "Whether a reasonable juror would find the evidence determinative of whether the contract was or was not formed.",
+                    Choice_B: "Whether the evidence has any tendency to make the fact of contract formation more or less probable than without the evidence.",
+                    Choice_C: "Whether the evidence is sufficient to prove, absent contrary evidence, that the contract was or was not formed.",
+                    Choice_D: "Whether the evidence makes it more likely than not that a contract was or was not formed.",
+                    Correct_Answer: "B",
+                    Explanation: "Relevance is defined as having any tendency to make a fact more or less probable.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Is the plaintiff's proposed testimony admissible?",
+                    Scenario: "A plaintiff sued for injuries arising from a car accident, claiming a back injury. At trial, she wishes to testify that before the accident she had never had any problems with her back.",
+                    Choice_A: "No, because the plaintiff has not been qualified as an expert.",
+                    Choice_B: "No, because the plaintiff's pain could have been caused by factors arising after the accident, such as an injury at work.",
+                    Choice_C: "Yes, because it is probative evidence of the plaintiff's injury.",
+                    Choice_D: "Yes, because the testimony of parties is not subject to the lay opinion rule.",
+                    Correct_Answer: "C",
+                    Explanation: "Lay testimony about the plaintiff's prior physical condition is relevant and probative to damages.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Should the photograph be admitted over the defendant's objection?",
+                    Scenario: "A plaintiff, who had been injured in an automobile collision, sued for damages. The defendant denied negligence and denied that the plaintiff's injuries were severe. At trial, the plaintiff has offered in evidence a color photograph of himself made from a videotape taken by a television news crew at the scene of the collision. The plaintiff has demonstrated that the videotape has since been routinely reused by the television station and that the footage of the plaintiff was erased. The photograph shows the plaintiff moments after the collision, with his bloodied head protruding at a grotesque angle through the broken windshield of his car.",
+                    Choice_A: "No, because the plaintiff has failed to establish that a duplicate could not be found.",
+                    Choice_B: "No, because the plaintiff has failed to produce the original videotape or a duplicate.",
+                    Choice_C: "Yes, because a photograph that establishes a disputed fact cannot be excluded as prejudicial.",
+                    Choice_D: "Yes, because it tends to prove a controverted fact.",
+                    Correct_Answer: "D",
+                    Explanation: "A photograph is admissible if it tends to prove a controverted fact, even if prejudicial.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Is the witness's testimony admissible?",
+                    Scenario: "In a suit based on a will, the distribution of $1 million depends upon whether the wife survived her husband when both died in the crash of a small airplane. An applicable statute provides that, for purposes of distributing an estate after a common disaster, there is a rebuttable presumption that neither spouse survived the other. A witness has been called to testify that as she approached the plane she heard what she thought was a woman's voice saying, 'I'm dying,' although by the time the husband and wife were removed from the wreckage they were both dead.",
+                    Choice_A: "No, because the matter is governed by the presumption that neither spouse survived the other.",
+                    Choice_B: "No, because the witness's testimony is too speculative to support a finding.",
+                    Choice_C: "Yes, because it is relevant and not otherwise prohibited.",
+                    Choice_D: "Yes, because the hearsay rule does not apply to statements by decedents in actions to determine rights under a will.",
+                    Correct_Answer: "C",
+                    Explanation: "A rebuttable presumption may be overcome by relevant evidence.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Should the court admit this evidence?",
+                    Scenario: "A defendant's house was destroyed by fire, and she was charged with arson. To prove that the defendant had a motive to burn down her house, the government offered evidence that the defendant had fully insured the house and its contents.",
+                    Choice_A: "No, because evidence of insurance is not admissible on the issue of whether the insured acted wrongfully.",
+                    Choice_B: "No, because the probative value of the evidence of insurance on the issue of whether the defendant intentionally burned her house down is substantially outweighed by the dangers of unfair prejudice and confusion of the jury.",
+                    Choice_C: "Yes, because any conduct of a party to the case is admissible when offered against the party.",
+                    Choice_D: "Yes, because evidence of insurance on the house has a tendency to show that the defendant had a motive to burn down the house.",
+                    Correct_Answer: "D",
+                    Explanation: "FRE 411 excludes evidence of insurance, but this may be permitted to show ownership or control.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Is the banker's testimony admissible?",
+                    Scenario: "A company sued the defendant, its former vice president, for return of $230,000 that had been embezzled during the previous two years. Called by the company as an adverse witness, the defendant testified that his annual salary had been $75,000, and he denied the embezzlement. The company calls a banker as a witness to show that, during the two-year period, the defendant had deposited $250,000 in his bank account.",
+                    Choice_A: "No, because its prejudicial effect substantially outweighs its probative value.",
+                    Choice_B: "No, because the deposits could have come from legitimate sources.",
+                    Choice_C: "Yes, as circumstantial evidence of the defendant's guilt.",
+                    Choice_D: "Yes, to impeach the defendant.",
+                    Correct_Answer: "C",
+                    Explanation: "Circumstantial evidence is admissible, and inconsistency with defendant's testimony supports its admission.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Is the testimony concerning the wife's intoxication admissible?",
+                    Scenario: "A man sued an auto manufacturer for his wife's death, claiming that a defective steering mechanism on the family car caused it to veer off the road and hit a tree when his wife was driving. The auto manufacturer claims that the steering mechanism was damaged in the collision and offers testimony that the deceased wife was intoxicated at the time of the accident.",
+                    Choice_A: "No, because it is improper to prove character evidence by specific conduct.",
+                    Choice_B: "No, because it is substantially more prejudicial than probative.",
+                    Choice_C: "Yes, as proper evidence of the wife's character.",
+                    Choice_D: "Yes, to provide an alternate explanation of the accident's cause.",
+                    Correct_Answer: "D",
+                    Explanation: "Evidence of an alternate cause is admissible even if it reflects negatively on the plaintiff.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "Is the jail employee's testimony admissible?",
+                    Scenario: "A defendant is on trial for kidnapping. The victim has testified that one of the kidnappers referred to the other as 'Speed.' The prosecutor calls a jail employee to testify that, while the defendant was in jail awaiting trial, other inmates addressed the defendant as 'Speed.'",
+                    Choice_A: "No, because it is hearsay not within any exception.",
+                    Choice_B: "No, because it is substantially more prejudicial than probative.",
+                    Choice_C: "Yes, as circumstantial evidence that the defendant was one of the kidnappers.",
+                    Choice_D: "Yes, to support the truthfulness of the victim.",
+                    Correct_Answer: "C",
+                    Explanation: "Circumstantial evidence of identity through a nickname is admissible.",
+                    Source: "In-Class MBE"
+                },
+                {
+                    Question: "What is the strongest basis for an objection to the admission of the photographs?",
+                    Scenario: "A woman sued a delivery driver for injuries sustained during a car collision. The woman called her treating physician to testify as to the nature and extent of her injuries. The woman now seeks to introduce several color printouts of photographs taken on a smartphone at the accident scene by a witness. The photographs depict the gruesome nature of the woman's injuries.",
+                    Choice_A: "The photographs are not relevant in light of the physician's testimony.",
+                    Choice_B: "The photographs' probative value is substantially outweighed by the danger of unfair prejudice.",
+                    Choice_C: "The photographs violate the best evidence rule.",
+                    Choice_D: "The woman did not take the photographs and therefore cannot authenticate them.",
+                    Correct_Answer: "B",
+                    Explanation: "Under FRE 403, gruesome photographs may be excluded despite relevance if prejudicial effect substantially outweighs probative value.",
                     Source: "In-Class MBE"
                 }
-                // Add more sample questions as needed
             ];
             initializeApp();
         }
