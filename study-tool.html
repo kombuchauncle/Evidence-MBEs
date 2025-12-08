@@ -232,12 +232,13 @@
 </head>
 <body>
     <h1>mbe evidence question bank</h1>
-    <p class="subtitle">santa clara university school of law</p>
-    <p class="subtitle" style="font-style: italic;">class of 2026 study tool</p>
+    <p class="subtitle">made by grace kantrow</p>
+    <p class="subtitle" style="font-size: 0.85rem; color: #666; margin-top: 10px;">
+        to add questions: <a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">edit google sheet</a> → auto-syncs here
+    </p>
     
     <div class="nav">
         <a href="#" onclick="showMode('browse'); return false;">browse questions</a> |
-        <a href="#" onclick="showMode('add'); return false;">add new question</a> |
         <a href="#" onclick="showMode('test'); return false;">generate practice test</a>
     </div>
     
@@ -261,59 +262,6 @@
             <div id="questionsList"></div>
         </div>
         
-        <!-- Add Mode -->
-        <div id="addMode" class="hidden">
-            <h2>add new question</h2>
-            <form id="addForm" onsubmit="addQuestion(event)">
-                <div class="form-group">
-                    <label>scenario (optional):</label>
-                    <textarea id="newScenario"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>question:</label>
-                    <textarea id="newQuestion" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>choice a:</label>
-                    <input type="text" id="newChoiceA" required>
-                </div>
-                <div class="form-group">
-                    <label>choice b:</label>
-                    <input type="text" id="newChoiceB" required>
-                </div>
-                <div class="form-group">
-                    <label>choice c:</label>
-                    <input type="text" id="newChoiceC" required>
-                </div>
-                <div class="form-group">
-                    <label>choice d:</label>
-                    <input type="text" id="newChoiceD" required>
-                </div>
-                <div class="form-group">
-                    <label>correct answer:</label>
-                    <select id="newCorrect" required>
-                        <option value="A">a</option>
-                        <option value="B">b</option>
-                        <option value="C">c</option>
-                        <option value="D">d</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>explanation:</label>
-                    <textarea id="newExplanation"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>source:</label>
-                    <input type="text" id="newSource" value="In-Class MBE">
-                </div>
-                <div class="form-group">
-                    <label>topic:</label>
-                    <input type="text" id="newTopic" value="Evidence">
-                </div>
-                <button type="submit">add question</button>
-            </form>
-        </div>
-        
         <!-- Test Mode -->
         <div id="testMode" class="hidden">
             <h2>generate practice test</h2>
@@ -335,21 +283,17 @@
         </div>
         
         <div class="footer center-text">
-            <p>questions stored locally in your browser</p>
-            <p><a href="#" onclick="downloadCSV(); return false;">download as csv</a> | 
-               <a href="#" onclick="uploadCSV(); return false;">upload csv</a> | 
-               <a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">edit in google sheets</a></p>
+            <p>edit questions in your google sheet - auto-syncs to this site</p>
+            <p><a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">open google sheet</a></p>
             <p style="margin-top: 20px; font-size: 0.8rem;">powered by authentic 90s technology<br>
             last updated: december 2025</p>
         </div>
     </div>
     
-    <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         // Load CSV data from GitHub or use embedded data
-        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+        const CSV_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/mbe_questions.csv';
         
         let questionBank = [];
         let filteredQuestions = [];
@@ -458,38 +402,11 @@
         
         function showMode(mode) {
             document.getElementById('browseMode').classList.add('hidden');
-            document.getElementById('addMode').classList.add('hidden');
             document.getElementById('testMode').classList.add('hidden');
             
             document.getElementById(mode + 'Mode').classList.remove('hidden');
         }
         
-        function addQuestion(e) {
-            e.preventDefault();
-            
-            const newQ = {
-                ID: `Q${String(questionBank.length + 1).padStart(3, '0')}`,
-                Question: document.getElementById('newQuestion').value,
-                Scenario: document.getElementById('newScenario').value,
-                Choice_A: document.getElementById('newChoiceA').value,
-                Choice_B: document.getElementById('newChoiceB').value,
-                Choice_C: document.getElementById('newChoiceC').value,
-                Choice_D: document.getElementById('newChoiceD').value,
-                Correct_Answer: document.getElementById('newCorrect').value,
-                Explanation: document.getElementById('newExplanation').value,
-                Source: document.getElementById('newSource').value,
-                Topic: document.getElementById('newTopic').value
-            };
-            
-            questionBank.push(newQ);
-            saveQuestions();
-            updateStats();
-            
-            document.getElementById('addForm').reset();
-            alert('question added successfully!');
-            showMode('browse');
-            renderQuestions();
-        }
         
         function generateTest() {
             const size = parseInt(document.getElementById('testSize').value);
