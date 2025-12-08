@@ -494,7 +494,7 @@
         let answeredQuestions = {};
         let libraryFilteredQuestions = [];
         
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQO6F1Nsq-Hb1pHoy-14qThBwskNAz2hhVnJ5gzPhwMiXxJHLQ70Kg0n-thpegNVxSHWwald9sz5V6s/pub?gid=0&single=true&output=csv';
+        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
         
         // Initialize on load - try multiple ways
         if (document.readyState !== 'loading') {
@@ -510,36 +510,48 @@
         function loadQuestions() {
             console.log('Attempting to load from:', CSV_URL);
             
-            fetch(CSV_URL)
+            fetch(CSV_URL, {
+                mode: 'cors',
+                headers: {
+                    'Accept': 'text/csv'
+                }
+            })
                 .then(response => {
                     console.log('Response status:', response.status);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    console.log('Response headers:', response.headers);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                    }
                     return response.text();
                 })
                 .then(csv => {
-                    console.log('CSV loaded, parsing...');
+                    console.log('CSV loaded, length:', csv.length);
+                    console.log('First 500 chars:', csv.substring(0, 500));
                     Papa.parse(csv, {
                         header: true,
                         skipEmptyLines: true,
                         complete: function(results) {
                             console.log('Parsed questions:', results.data.length);
+                            console.log('First question:', results.data[0]);
                             allQuestions = results.data.filter(q => q.Question && q.Question.trim());
                             console.log('Filtered questions:', allQuestions.length);
                             if (allQuestions.length > 0) {
+                                console.log('Loading from CSV - found', allQuestions.length, 'questions');
                                 initializeApp();
                             } else {
-                                console.log('No questions found, loading sample data');
+                                console.log('No questions found in CSV, loading sample data');
                                 loadSampleData();
                             }
                         },
                         error: function(err) {
-                            console.error('Parse error:', err);
+                            console.error('Papa Parse error:', err);
                             loadSampleData();
                         }
                     });
                 })
                 .catch(err => {
-                    console.error('Fetch error:', err);
+                    console.error('Fetch error details:', err.message);
+                    console.log('Loading sample data as fallback');
                     loadSampleData();
                 });
         }
