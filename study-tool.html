@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mbe evidence question bank</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             background-color: #e6f2ff;
             font-family: 'Times New Roman', Times, serif;
             color: #000;
-            text-align: center;
             padding: 40px 20px;
             line-height: 1.6;
         }
@@ -18,24 +23,25 @@
             font-size: 2.5rem;
             font-weight: normal;
             margin-bottom: 10px;
+            text-align: center;
         }
         
         h2 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: normal;
-            font-style: italic;
-            margin: 20px 0;
+            margin: 30px 0 20px 0;
+            text-align: center;
         }
         
         .subtitle {
             font-size: 0.95rem;
+            text-align: center;
             margin: 5px 0;
         }
         
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            text-align: left;
         }
         
         .center-text {
@@ -55,446 +61,675 @@
             color: #0000ee;
         }
         
+        /* Navigation/Mode Toggle */
         .nav {
             margin: 30px 0;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
-        .nav a {
-            margin: 0 15px;
-        }
-        
-        .question-list {
-            margin: 30px 0;
-        }
-        
-        .question-card {
-            border: 1px solid #999;
-            padding: 20px;
-            margin: 20px 0;
+        .nav-btn {
             background: #fff;
+            border: 2px solid #000;
+            padding: 10px 25px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+            transition: all 0.2s ease;
         }
         
-        .question-header {
-            font-weight: bold;
+        .nav-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .nav-btn.active {
+            background: #551a8b;
+            color: #fff;
+        }
+        
+        /* Quiz Mode */
+        #quizMode {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #999;
+        }
+        
+        .quiz-progress {
+            font-size: 1rem;
+            color: #666;
             margin-bottom: 10px;
         }
         
+        .quiz-counter {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .quiz-container {
+            background: #fff;
+            border: 1px solid #999;
+            padding: 40px 30px;
+            margin: 30px 0;
+        }
+        
+        .scenario {
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
         .question-text {
-            margin: 15px 0;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin: 20px 0 30px 0;
+            line-height: 1.5;
         }
         
         .choices {
-            margin: 15px 0;
-            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 30px 0;
         }
         
         .choice {
-            margin: 8px 0;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
             cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
         }
         
-        .answer-section {
-            margin-top: 15px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-left: 3px solid #551a8b;
+        .choice:hover {
+            background: #f9f9f9;
+            border-color: #551a8b;
+        }
+        
+        .choice-letter {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .answer-reveal {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #551a8b;
             display: none;
         }
         
-        .answer-section.visible {
+        .answer-reveal.visible {
             display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .correct-answer {
+            color: #2d5016;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .explanation {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 3px solid #551a8b;
+            margin-top: 10px;
+            color: #333;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 8px;
         }
         
         .show-answer-btn {
             background: #fff;
             border: 1px solid #000;
-            padding: 8px 20px;
+            padding: 10px 25px;
             cursor: pointer;
             font-family: 'Times New Roman', Times, serif;
             font-size: 0.95rem;
-            margin-top: 10px;
+            margin: 20px 0;
+            transition: all 0.2s ease;
         }
         
         .show-answer-btn:hover {
             background: #f0f0f0;
         }
         
-        .correct-indicator {
-            color: green;
-            font-weight: bold;
+        .show-answer-btn.hidden-answer:after {
+            content: " ▼";
+        }
+        
+        .show-answer-btn.show-answer:after {
+            content: " ▲";
+        }
+        
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .quiz-nav button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-nav button:hover {
+            background: #f0f0f0;
+        }
+        
+        .quiz-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .new-quiz-btn {
+            background: #551a8b !important;
+            color: #fff !important;
+        }
+        
+        .new-quiz-btn:hover {
+            background: #6b2a9b !important;
+        }
+        
+        /* Library Mode */
+        #libraryMode {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .library-controls {
+            background: #fff;
+            border: 1px solid #999;
+            padding: 20px;
+            margin: 20px 0;
         }
         
         .search-box {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 1rem;
             border: 1px solid #999;
-            margin: 10px 0;
+            margin-bottom: 15px;
         }
         
-        .filter-section {
-            margin: 20px 0;
-            padding: 15px;
-            background: #fff;
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-row label {
+            font-weight: bold;
+        }
+        
+        .filter-row select {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 5px 10px;
             border: 1px solid #999;
         }
         
-        .stats {
+        .library-stats {
+            text-align: center;
             font-size: 0.9rem;
             color: #666;
-            margin: 10px 0;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
         }
         
-        .footer {
-            margin-top: 50px;
-            font-size: 0.85rem;
-            color: #666;
-            border-top: 1px solid #999;
-            padding-top: 20px;
-        }
-        
-        select {
-            font-family: 'Times New Roman', Times, serif;
-            padding: 5px;
+        .question-card {
             border: 1px solid #999;
-        }
-        
-        .mode-toggle {
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .mode-btn {
+            padding: 20px;
+            margin: 15px 0;
             background: #fff;
-            border: 1px solid #000;
-            padding: 10px 25px;
             cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            margin: 0 5px;
+            transition: all 0.2s ease;
         }
         
-        .mode-btn.active {
-            background: #551a8b;
-            color: #fff;
+        .question-card:hover {
+            border-color: #551a8b;
+            box-shadow: 0 2px 8px rgba(85, 26, 139, 0.1);
+        }
+        
+        .question-card.expanded {
+            border-color: #551a8b;
+            background: #fafafa;
+        }
+        
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .question-card-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            flex: 1;
+        }
+        
+        .question-card-meta {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        .question-card-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .question-card.expanded .question-card-content {
+            display: block;
+        }
+        
+        .card-scenario {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .card-choices {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .card-choice {
+            margin: 8px 0;
+        }
+        
+        .card-answer {
+            background: #f5f5f5;
+            padding: 12px;
+            border-left: 3px solid #551a8b;
+            margin-top: 15px;
+        }
+        
+        .card-answer-label {
+            color: #2d5016;
+            font-weight: bold;
+        }
+        
+        .expand-icon {
+            color: #551a8b;
+            font-weight: bold;
+            margin-left: 10px;
         }
         
         .hidden {
             display: none;
         }
         
-        #addForm {
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #999;
-            margin: 20px 0;
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #999;
+            padding-top: 20px;
         }
         
-        .form-group {
-            margin: 15px 0;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            font-family: 'Times New Roman', Times, serif;
-            padding: 8px;
-            border: 1px solid #999;
-        }
-        
-        .form-group textarea {
-            min-height: 80px;
-        }
-        
-        button[type="submit"] {
-            background: #551a8b;
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 1rem;
-        }
-        
-        button[type="submit"]:hover {
-            background: #6b2a9b;
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <h1>mbe evidence question bank</h1>
     <p class="subtitle">made by grace kantrow</p>
-    <p class="subtitle" style="font-size: 0.85rem; color: #666; margin-top: 10px;">
-        to add questions: <a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">edit google sheet</a> → auto-syncs here
-    </p>
-    
-    <div class="nav">
-        <a href="#" onclick="showMode('browse'); return false;">browse questions</a> |
-        <a href="#" onclick="showMode('test'); return false;">generate practice test</a>
-    </div>
     
     <div class="container">
-        <div class="stats center-text" id="stats">
-            loading question bank...
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="switchMode('quiz')">quiz mode</button>
+            <button class="nav-btn" onclick="switchMode('library')">library</button>
         </div>
         
-        <!-- Browse Mode -->
-        <div id="browseMode">
-            <div class="filter-section">
-                <input type="text" class="search-box" id="searchBox" placeholder="search questions..." onkeyup="filterQuestions()">
-                <div style="margin-top: 10px;">
-                    <label>filter by source: </label>
-                    <select id="sourceFilter" onchange="filterQuestions()">
+        <!-- QUIZ MODE -->
+        <div id="quizMode">
+            <div class="quiz-header">
+                <div class="quiz-progress">practice test</div>
+                <div class="quiz-counter">
+                    <span id="currentQuestion">1</span> / <span id="totalQuestions">10</span>
+                </div>
+                <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">new quiz</button>
+            </div>
+            
+            <div class="quiz-container">
+                <div id="scenarioContainer" class="scenario"></div>
+                <div id="questionContainer" class="question-text"></div>
+                <div id="choicesContainer" class="choices"></div>
+                <button id="showAnswerBtn" class="show-answer-btn hidden-answer" onclick="toggleAnswer()">show answer</button>
+                <div id="answerContainer" class="answer-reveal"></div>
+            </div>
+            
+            <div class="quiz-nav">
+                <button id="prevBtn" onclick="previousQuestion()" disabled>← previous</button>
+                <span id="navInfo" style="text-align: center; flex: 1;"></span>
+                <button id="nextBtn" onclick="nextQuestion()">next →</button>
+            </div>
+        </div>
+        
+        <!-- LIBRARY MODE -->
+        <div id="libraryMode" class="hidden">
+            <h2>question library</h2>
+            
+            <div class="library-controls">
+                <input 
+                    type="text" 
+                    class="search-box" 
+                    id="searchBox" 
+                    placeholder="search by question, topic, or scenario..."
+                    onkeyup="filterLibrary()"
+                >
+                <div class="filter-row">
+                    <label>filter by source:</label>
+                    <select id="sourceFilter" onchange="filterLibrary()">
                         <option value="">all sources</option>
                     </select>
                 </div>
             </div>
             
-            <div id="questionsList"></div>
+            <div class="library-stats" id="libraryStats"></div>
+            
+            <div id="libraryContainer"></div>
         </div>
         
-        <!-- Test Mode -->
-        <div id="testMode" class="hidden">
-            <h2>generate practice test</h2>
-            <div style="background: #fff; padding: 20px; border: 1px solid #999;">
-                <div class="form-group">
-                    <label>number of questions:</label>
-                    <input type="number" id="testSize" min="1" value="25">
-                </div>
-                <div class="form-group">
-                    <label>randomize order:</label>
-                    <select id="randomize">
-                        <option value="yes">yes</option>
-                        <option value="no">no</option>
-                    </select>
-                </div>
-                <button onclick="generateTest()" style="background: #551a8b; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Times New Roman', Times, serif;">generate test</button>
-            </div>
-            <div id="testPreview" style="margin-top: 20px;"></div>
-        </div>
-        
-        <div class="footer center-text">
-            <p>edit questions in your google sheet - auto-syncs to this site</p>
-            <p><a href="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID" target="_blank">open google sheet</a></p>
-            <p style="margin-top: 20px; font-size: 0.8rem;">powered by authentic 90s technology<br>
-            last updated: december 2025</p>
+        <!-- Footer -->
+        <div class="footer">
+            <p id="totalQuestionsFooter"></p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">last updated: december 2025</p>
         </div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // Load CSV data from GitHub or use embedded data
-        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+        // State management
+        let allQuestions = [];
+        let currentQuiz = [];
+        let currentQuizIndex = 0;
+        let answeredQuestions = {};
+        let libraryFilteredQuestions = [];
         
-        let questionBank = [];
-        let filteredQuestions = [];
+        const CSV_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/questions.csv';
         
-        // Initialize
-        loadQuestions();
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadQuestions();
+        });
         
         function loadQuestions() {
-            // Always load fresh from GitHub CSV
-            loadInitialQuestions();
-        }
-        
-        function loadInitialQuestions() {
-            // Load from GitHub
+            // For now, use embedded data. Replace with actual CSV loading
             fetch(CSV_URL)
                 .then(response => response.text())
                 .then(csv => {
                     Papa.parse(csv, {
                         header: true,
+                        skipEmptyLines: true,
                         complete: function(results) {
-                            questionBank = results.data.filter(q => q.ID);
-                            renderQuestions();
-                            updateStats();
+                            allQuestions = results.data.filter(q => q.Question && q.Question.trim());
+                            initializeApp();
                         }
                     });
                 })
                 .catch(err => {
-                    console.log('Using embedded data');
-                    questionBank = INITIAL_QUESTIONS;
-                    saveQuestions();
-                    renderQuestions();
-                    updateStats();
+                    console.log('Could not load CSV, using sample data');
+                    loadSampleData();
                 });
         }
         
-        function saveQuestions() {
-            localStorage.setItem('mbeQuestions', JSON.stringify(questionBank));
+        function loadSampleData() {
+            // You'll replace this with your actual questions
+            allQuestions = [
+                {
+                    Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
+                    Scenario: "In a prosecution for aggravated battery, a police officer testified that when he arrested the defendant, he took a knife from the defendant and delivered it to the medical examiner. The medical examiner testified that the knife blade was consistent with the victim's wound but admitted on cross-examination that any number of other knives could also have caused the wound.",
+                    Choice_A: "No, because the probative worth of this evidence is for the jury to assess.",
+                    Choice_B: "Yes, because in light of the medical examiner's admission, his testimony has insufficient probative value.",
+                    Choice_C: "Yes, because the medical examiner could not state the probability that the wound was caused by the defendant's knife.",
+                    Choice_D: "Yes, because the probative value is substantially outweighed by the danger of unfair prejudice.",
+                    Correct_Answer: "B",
+                    Explanation: "Evidence that has insufficient probative value may be excluded.",
+                    Source: "In-Class MBE"
+                }
+                // Add more sample questions as needed
+            ];
+            initializeApp();
         }
         
-        function updateStats() {
-            const sources = [...new Set(questionBank.map(q => q.Source))];
-            document.getElementById('stats').innerHTML = `
-                ${questionBank.length} total questions | ${sources.length} source(s)
-            `;
-            
-            // Update source filter
-            const sourceFilter = document.getElementById('sourceFilter');
-            sourceFilter.innerHTML = '<option value="">all sources</option>' +
+        function initializeApp() {
+            updateSourceFilter();
+            generateNewQuiz();
+            updateFooter();
+        }
+        
+        function updateSourceFilter() {
+            const sources = [...new Set(allQuestions.map(q => q.Source).filter(Boolean))];
+            const filterSelect = document.getElementById('sourceFilter');
+            filterSelect.innerHTML = '<option value="">all sources</option>' +
                 sources.map(s => `<option value="${s}">${s}</option>`).join('');
         }
         
-        function renderQuestions() {
+        function generateNewQuiz() {
+            // Shuffle and pick 10 random questions
+            const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+            currentQuiz = shuffled.slice(0, 10);
+            currentQuizIndex = 0;
+            answeredQuestions = {};
+            displayQuestion();
+        }
+        
+        function displayQuestion() {
+            if (currentQuiz.length === 0) return;
+            
+            const q = currentQuiz[currentQuizIndex];
+            
+            // Scenario
+            const scenarioContainer = document.getElementById('scenarioContainer');
+            scenarioContainer.innerHTML = q.Scenario ? `<p>${q.Scenario}</p>` : '';
+            
+            // Question
+            document.getElementById('questionContainer').innerHTML = q.Question;
+            
+            // Choices
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = `
+                <div class="choice" onclick="selectChoice('A')"><span class="choice-letter">a.</span> ${q.Choice_A}</div>
+                <div class="choice" onclick="selectChoice('B')"><span class="choice-letter">b.</span> ${q.Choice_B}</div>
+                <div class="choice" onclick="selectChoice('C')"><span class="choice-letter">c.</span> ${q.Choice_C}</div>
+                <div class="choice" onclick="selectChoice('D')"><span class="choice-letter">d.</span> ${q.Choice_D}</div>
+            `;
+            
+            // Answer section
+            const answerContainer = document.getElementById('answerContainer');
+            answerContainer.innerHTML = `
+                <div class="correct-answer">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
+                ${q.Explanation ? `<div class="explanation"><div class="explanation-title">explanation:</div>${q.Explanation}</div>` : ''}
+            `;
+            answerContainer.classList.remove('visible');
+            
+            // Reset show answer button
+            const showAnswerBtn = document.getElementById('showAnswerBtn');
+            showAnswerBtn.classList.remove('show-answer');
+            showAnswerBtn.classList.add('hidden-answer');
+            
+            // Update counter and nav
+            document.getElementById('currentQuestion').innerHTML = currentQuizIndex + 1;
+            document.getElementById('totalQuestions').innerHTML = currentQuiz.length;
+            
+            // Update nav buttons
+            document.getElementById('prevBtn').disabled = currentQuizIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQuizIndex === currentQuiz.length - 1;
+            
+            // Update info
+            document.getElementById('navInfo').innerHTML = 
+                currentQuizIndex === currentQuiz.length - 1 
+                    ? '<em>last question</em>' 
+                    : '';
+            
+            // Scroll to top
+            document.querySelector('.quiz-container').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function toggleAnswer() {
+            const answerContainer = document.getElementById('answerContainer');
+            const btn = document.getElementById('showAnswerBtn');
+            answerContainer.classList.toggle('visible');
+            btn.classList.toggle('hidden-answer');
+            btn.classList.toggle('show-answer');
+            answeredQuestions[currentQuizIndex] = true;
+        }
+        
+        function selectChoice(choice) {
+            // Optional: highlight selected choice
+            console.log(`Selected: ${choice}`);
+        }
+        
+        function nextQuestion() {
+            if (currentQuizIndex < currentQuiz.length - 1) {
+                currentQuizIndex++;
+                displayQuestion();
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuizIndex > 0) {
+                currentQuizIndex--;
+                displayQuestion();
+            }
+        }
+        
+        // Library Mode
+        function filterLibrary() {
             const search = document.getElementById('searchBox').value.toLowerCase();
             const sourceFilter = document.getElementById('sourceFilter').value;
             
-            filteredQuestions = questionBank.filter(q => {
+            libraryFilteredQuestions = allQuestions.filter(q => {
                 const matchesSearch = !search || 
-                    q.Question.toLowerCase().includes(search) ||
+                    (q.Question && q.Question.toLowerCase().includes(search)) ||
                     (q.Scenario && q.Scenario.toLowerCase().includes(search)) ||
-                    q.Topic.toLowerCase().includes(search);
+                    (q.Source && q.Source.toLowerCase().includes(search));
                 
                 const matchesSource = !sourceFilter || q.Source === sourceFilter;
                 
                 return matchesSearch && matchesSource;
             });
             
-            const html = filteredQuestions.map((q, idx) => `
-                <div class="question-card">
-                    <div class="question-header">${q.ID} | ${q.Source} | ${q.Topic}</div>
-                    ${q.Scenario ? `<p style="font-style: italic; color: #666;">${q.Scenario}</p>` : ''}
-                    <div class="question-text">${q.Question}</div>
-                    <div class="choices">
-                        <div class="choice">a. ${q.Choice_A}</div>
-                        <div class="choice">b. ${q.Choice_B}</div>
-                        <div class="choice">c. ${q.Choice_C}</div>
-                        <div class="choice">d. ${q.Choice_D}</div>
-                    </div>
-                    <button class="show-answer-btn" onclick="toggleAnswer(${idx})">show answer</button>
-                    <div class="answer-section" id="answer-${idx}">
-                        <p><span class="correct-indicator">correct answer: ${q.Correct_Answer}</span></p>
-                        ${q.Explanation ? `<p style="margin-top: 10px;">${q.Explanation}</p>` : '<p style="color: #999; font-style: italic;">no explanation added yet</p>'}
-                    </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('questionsList').innerHTML = html || '<p class="center-text">no questions match your search</p>';
+            renderLibrary();
         }
         
-        function toggleAnswer(idx) {
-            const answerDiv = document.getElementById(`answer-${idx}`);
-            answerDiv.classList.toggle('visible');
-        }
-        
-        function filterQuestions() {
-            renderQuestions();
-        }
-        
-        function showMode(mode) {
-            document.getElementById('browseMode').classList.add('hidden');
-            document.getElementById('testMode').classList.add('hidden');
+        function renderLibrary() {
+            const container = document.getElementById('libraryContainer');
             
-            document.getElementById(mode + 'Mode').classList.remove('hidden');
-        }
-        
-        
-        function generateTest() {
-            const size = parseInt(document.getElementById('testSize').value);
-            const randomize = document.getElementById('randomize').value === 'yes';
-            
-            let questions = [...filteredQuestions];
-            
-            if (randomize) {
-                questions = questions.sort(() => Math.random() - 0.5);
+            if (libraryFilteredQuestions.length === 0) {
+                container.innerHTML = '<div class="empty-message">no questions match your search</div>';
+                document.getElementById('libraryStats').innerHTML = 'No results';
+                return;
             }
             
-            questions = questions.slice(0, Math.min(size, questions.length));
-            
-            const preview = questions.map((q, idx) => `
-                <p>${idx + 1}. ${q.Question} <span style="color: #666;">(${q.ID})</span></p>
+            const html = libraryFilteredQuestions.map((q, idx) => `
+                <div class="question-card" onclick="toggleCardExpand(this)">
+                    <div class="question-card-header">
+                        <div>
+                            <div class="question-card-title">${q.Question}</div>
+                            <div class="question-card-meta">${q.Source || 'Unknown Source'}</div>
+                        </div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-card-content">
+                        ${q.Scenario ? `<div class="card-scenario">${q.Scenario}</div>` : ''}
+                        <div class="card-choices">
+                            <div class="card-choice"><strong>a.</strong> ${q.Choice_A}</div>
+                            <div class="card-choice"><strong>b.</strong> ${q.Choice_B}</div>
+                            <div class="card-choice"><strong>c.</strong> ${q.Choice_C}</div>
+                            <div class="card-choice"><strong>d.</strong> ${q.Choice_D}</div>
+                        </div>
+                        <div class="card-answer">
+                            <div class="card-answer-label">answer: ${q.Correct_Answer}</div>
+                            ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
             `).join('');
             
-            document.getElementById('testPreview').innerHTML = `
-                <div style="background: #fff; padding: 20px; border: 1px solid #999;">
-                    <h3>test preview (${questions.length} questions)</h3>
-                    ${preview}
-                    <button onclick="downloadTest(${JSON.stringify(questions).replace(/"/g, '&quot;')})" 
-                            style="background: #551a8b; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Times New Roman', Times, serif; margin-top: 15px;">
-                        download test & answer key
-                    </button>
-                </div>
-            `;
+            container.innerHTML = html;
+            document.getElementById('libraryStats').innerHTML = 
+                `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
         }
         
-        function downloadTest(questions) {
-            let test = `MBE EVIDENCE PRACTICE TEST\n`;
-            test += `Generated: ${new Date().toLocaleDateString()}\n`;
-            test += `Total Questions: ${questions.length}\n\n`;
-            test += `${'='.repeat(60)}\n\n`;
-            
-            questions.forEach((q, idx) => {
-                test += `${idx + 1}. ${q.Question}\n\n`;
-                if (q.Scenario) test += `${q.Scenario}\n\n`;
-                test += `a. ${q.Choice_A}\n`;
-                test += `b. ${q.Choice_B}\n`;
-                test += `c. ${q.Choice_C}\n`;
-                test += `d. ${q.Choice_D}\n\n`;
-                test += `${'-'.repeat(60)}\n\n`;
+        function toggleCardExpand(card) {
+            // Close other cards
+            document.querySelectorAll('.question-card').forEach(c => {
+                if (c !== card) c.classList.remove('expanded');
             });
+            // Toggle this card
+            card.classList.toggle('expanded');
+        }
+        
+        function switchMode(mode) {
+            // Update buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
             
-            downloadFile(test, `mbe_test_${Date.now()}.txt`);
+            // Update views
+            document.getElementById('quizMode').classList.add('hidden');
+            document.getElementById('libraryMode').classList.add('hidden');
             
-            // Answer key
-            let answers = `MBE EVIDENCE ANSWER KEY\n`;
-            answers += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-            answers += `${'='.repeat(60)}\n\n`;
-            
-            questions.forEach((q, idx) => {
-                answers += `${idx + 1}. ${q.Correct_Answer} (${q.ID})\n`;
-                if (q.Explanation) answers += `   ${q.Explanation}\n`;
-                answers += `\n`;
-            });
-            
-            setTimeout(() => downloadFile(answers, `mbe_answers_${Date.now()}.txt`), 500);
+            if (mode === 'quiz') {
+                document.getElementById('quizMode').classList.remove('hidden');
+            } else {
+                document.getElementById('libraryMode').classList.remove('hidden');
+                filterLibrary();
+            }
         }
         
-        function downloadFile(content, filename) {
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
+        function updateFooter() {
+            document.getElementById('totalQuestionsFooter').innerHTML = 
+                `<strong>${allQuestions.length}</strong> total questions in bank`;
         }
-        
-        function downloadCSV() {
-            const csv = Papa.unparse(questionBank);
-            downloadFile(csv, `mbe_questions_${Date.now()}.csv`);
-        }
-        
-        function uploadCSV() {
-            document.getElementById('fileInput').click();
-        }
-        
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            Papa.parse(file, {
-                header: true,
-                complete: function(results) {
-                    if (confirm('this will replace all current questions. continue?')) {
-                        questionBank = results.data.filter(q => q.ID);
-                        saveQuestions();
-                        renderQuestions();
-                        updateStats();
-                        alert('questions loaded successfully!');
-                    }
-                }
-            });
-        }
-        
-        // Embedded initial data (your 62 questions)
-        const INITIAL_QUESTIONS = [];
     </script>
 </body>
 </html>
