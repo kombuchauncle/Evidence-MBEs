@@ -496,27 +496,50 @@
         
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQO6F1Nsq-Hb1pHoy-14qThBwskNAz2hhVnJ5gzPhwMiXxJHLQ70Kg0n-thpegNVxSHWwald9sz5V6s/pub?gid=0&single=true&output=csv';
         
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', function() {
+        // Initialize on load - try multiple ways
+        if (document.readyState !== 'loading') {
+            console.log('Document already loaded, initializing immediately');
             loadQuestions();
-        });
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOMContentLoaded event fired');
+                loadQuestions();
+            });
+        }
         
         function loadQuestions() {
-            // For now, use embedded data. Replace with actual CSV loading
+            console.log('Attempting to load from:', CSV_URL);
+            
             fetch(CSV_URL)
-                .then(response => response.text())
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.text();
+                })
                 .then(csv => {
+                    console.log('CSV loaded, parsing...');
                     Papa.parse(csv, {
                         header: true,
                         skipEmptyLines: true,
                         complete: function(results) {
+                            console.log('Parsed questions:', results.data.length);
                             allQuestions = results.data.filter(q => q.Question && q.Question.trim());
-                            initializeApp();
+                            console.log('Filtered questions:', allQuestions.length);
+                            if (allQuestions.length > 0) {
+                                initializeApp();
+                            } else {
+                                console.log('No questions found, loading sample data');
+                                loadSampleData();
+                            }
+                        },
+                        error: function(err) {
+                            console.error('Parse error:', err);
+                            loadSampleData();
                         }
                     });
                 })
                 .catch(err => {
-                    console.log('Could not load CSV, using sample data');
+                    console.error('Fetch error:', err);
                     loadSampleData();
                 });
         }
