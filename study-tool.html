@@ -794,7 +794,9 @@
                     <button class="quiz-show-answer-btn" onclick="toggleQuizAnswer(this)">show answer</button>
                     <div class="quiz-answer-reveal" data-question="${idx}">
                         <div class="quiz-answer-label">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
-                        ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
+                        ${q.Explanation ? `<div style="margin-top: 10px;"><strong>explanation:</strong> ${q.Explanation}</div>` : ''}
+                        ${q.Topic ? `<div style="margin-top: 10px;"><strong>topic:</strong> ${q.Topic}</div>` : ''}
+                        ${q.Source ? `<div style="margin-top: 10px;"><strong>source:</strong> ${q.Source}</div>` : ''}
                     </div>
                     
                     <!-- EXPLANATION INPUT SECTION -->
