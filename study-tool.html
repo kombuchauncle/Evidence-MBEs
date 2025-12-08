@@ -799,7 +799,16 @@
                     
                     <!-- EXPLANATION INPUT SECTION -->
                     <div class="explanation-input-section">
-                        <div class="explanation-input-label">add your explanation:</div>
+                        <div class="explanation-input-label">topic:</div>
+                        <input 
+                            type="text" 
+                            class="explanation-input" 
+                            id="topic-input-${idx}"
+                            placeholder="e.g., Hearsay, Relevance, Character Evidence..."
+                            data-question-index="${idx}"
+                            style="min-height: auto; padding: 8px;"
+                        >
+                        <div class="explanation-input-label" style="margin-top: 15px;">add your explanation:</div>
                         <textarea 
                             class="explanation-input" 
                             id="explanation-input-${idx}"
@@ -825,7 +834,9 @@
         }
         
         async function saveExplanation(questionIndex) {
+            const topicInput = document.getElementById(`topic-input-${questionIndex}`);
             const textarea = document.getElementById(`explanation-input-${questionIndex}`);
+            const topic = topicInput.value.trim();
             const explanation = textarea.value.trim();
             const question = currentQuiz[questionIndex];
             const indicator = document.getElementById(`save-indicator-${questionIndex}`);
@@ -844,7 +855,7 @@
             
             try {
                 // Send to Google Sheets via our backend
-                const result = await updateGoogleSheet(question, explanation);
+                const result = await updateGoogleSheet(question, topic, explanation);
                 
                 if (result.success) {
                     // Update UI
@@ -854,8 +865,10 @@
                     
                     // Save locally too
                     question.UserExplanation = explanation;
+                    question.UserTopic = topic;
                     
-                    // Disable the textarea and button after successful save
+                    // Disable the inputs and button after successful save
+                    topicInput.disabled = true;
                     textarea.disabled = true;
                     btn.disabled = true;
                     btn.textContent = 'saved ✓';
@@ -895,19 +908,21 @@
             }
         }
         
-        async function updateGoogleSheet(question, explanation) {
+        async function updateGoogleSheet(question, topic, explanation) {
             console.log('Saving to Google Sheets via Apps Script...');
             console.log('Question:', question.Question.substring(0, 100));
+            console.log('Topic:', topic);
             console.log('Explanation:', explanation.substring(0, 100));
             
             try {
                 // Create JSON payload but send as text/plain to avoid CORS preflight
                 const payload = JSON.stringify({
                     question: question.Question,
+                    topic: topic,
                     explanation: explanation
                 });
                 
-                console.log('Payload:', payload.substring(0, 100));
+                console.log('Payload:', payload.substring(0, 150));
                 
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
