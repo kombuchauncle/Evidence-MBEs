@@ -653,9 +653,9 @@
         const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1bt4aADO8QQ8Px6NwLEKt10f4DsyEDBw6L83-x53TyGbu3kgbef_Sbm0v0sP4Q/exec';
         
-        // Use a CORS proxy to bypass browser restrictions
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-        const PROXIED_APPS_SCRIPT_URL = CORS_PROXY + APPS_SCRIPT_URL;
+        // Use allorigins proxy - doesn't require auth
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        const PROXIED_APPS_SCRIPT_URL = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
         
         // State management
         let allQuestions = [];
