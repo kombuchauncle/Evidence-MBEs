@@ -939,15 +939,22 @@
                 const responseText = await response.text();
                 console.log('Raw response from Apps Script:', responseText);
                 
-                // Try to parse as JSON
+                // Parse the simple text response
                 let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    console.error('Failed to parse response as JSON:', e);
+                if (responseText === 'ok') {
+                    result = {
+                        success: true,
+                        message: 'Data saved successfully'
+                    };
+                } else if (responseText.startsWith('error:')) {
                     result = {
                         success: false,
-                        message: 'Invalid response from server: ' + responseText.substring(0, 100)
+                        message: responseText.substring(7) // Remove "error: " prefix
+                    };
+                } else {
+                    result = {
+                        success: false,
+                        message: 'Unknown response: ' + responseText
                     };
                 }
                 
