@@ -364,6 +364,11 @@
             box-shadow: 0 0 5px rgba(85, 26, 139, 0.3);
         }
         
+        .topic-input {
+            min-height: auto !important;
+            padding: 8px !important;
+        }
+        
         .explanation-save-btn {
             background: #fff;
             border: 1px solid #551a8b;
@@ -804,11 +809,10 @@
                         <div class="explanation-input-label">topic:</div>
                         <input 
                             type="text" 
-                            class="explanation-input" 
+                            class="explanation-input topic-input" 
                             id="topic-input-${idx}"
                             placeholder="e.g., Hearsay, Relevance, Character Evidence..."
                             data-question-index="${idx}"
-                            style="min-height: auto; padding: 8px;"
                         >
                         <div class="explanation-input-label" style="margin-top: 15px;">add your explanation:</div>
                         <textarea 
@@ -844,8 +848,9 @@
             const indicator = document.getElementById(`save-indicator-${questionIndex}`);
             const btn = textarea.nextElementSibling;
             
-            if (!explanation) {
-                showStatus('Please write an explanation before saving', 'error');
+            // Allow saving if either topic OR explanation is provided
+            if (!explanation && !topic) {
+                showStatus('Please write a topic or explanation before saving', 'error');
                 return;
             }
             
@@ -866,12 +871,20 @@
                     indicator.textContent = '✓ saved to sheets';
                     
                     // Save locally too
-                    question.UserExplanation = explanation;
-                    question.UserTopic = topic;
+                    if (explanation) {
+                        question.UserExplanation = explanation;
+                    }
+                    if (topic) {
+                        question.UserTopic = topic;
+                    }
                     
                     // Disable the inputs and button after successful save
-                    topicInput.disabled = true;
-                    textarea.disabled = true;
+                    if (explanation) {
+                        textarea.disabled = true;
+                    }
+                    if (topic) {
+                        topicInput.disabled = true;
+                    }
                     btn.disabled = true;
                     btn.textContent = 'saved ✓';
                     
