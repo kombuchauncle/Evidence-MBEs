@@ -873,18 +873,13 @@
                     // Save locally too
                     if (explanation) {
                         question.UserExplanation = explanation;
-                    }
-                    if (topic) {
-                        question.UserTopic = topic;
-                    }
-                    
-                    // Disable the inputs and button after successful save
-                    if (explanation) {
                         textarea.disabled = true;
                     }
                     if (topic) {
+                        question.UserTopic = topic;
                         topicInput.disabled = true;
                     }
+                    
                     btn.disabled = true;
                     btn.textContent = 'saved ✓';
                     
@@ -895,14 +890,24 @@
                     
                     showStatus(result.message, 'saved');
                 } else {
-                    // Explanation already exists
+                    // Error occurred - only for explanation conflicts
                     indicator.classList.remove('saving');
                     indicator.classList.add('error');
-                    indicator.textContent = '✗ field not empty';
+                    indicator.textContent = '✗ explanation exists';
                     showStatus(result.message, 'error');
+                    
+                    // If only topic was being saved, still allow it to be disabled
+                    if (topic && !explanation) {
+                        topicInput.disabled = true;
+                        indicator.classList.remove('error');
+                        indicator.classList.add('saved');
+                        indicator.textContent = '✓ topic saved';
+                        showStatus('Topic saved successfully', 'saved');
+                    }
                     
                     setTimeout(() => {
                         indicator.classList.remove('error');
+                        indicator.classList.remove('saved');
                         indicator.textContent = '';
                     }, 4000);
                 }
