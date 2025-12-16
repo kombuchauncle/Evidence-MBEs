@@ -654,8 +654,9 @@
     <script>
         // Configuration
         const SHEET_ID = '1WYZ5grBXcYZSXDhozYvHh74HRcvxQfsUXt2twjp7cV8';
-        const SHEET_TAB_ID = '1962900808';
-        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+        const SHEET_TAB_NAME = 'Sheet1'; // Change this to your sheet tab name if different
+        const SHEETS_API_KEY = 'AIzaSyAh1URP8XuV6Dbsms4C5xFH8EmgHMSuHK8';
+        const SHEETS_API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB_NAME}?key=${SHEETS_API_KEY}`;
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1bt4aADO8QQ8Px6NwLEKt10f4DsyEDBw6L83-x53TyGbu3kgbef_Sbm0v0sP4Q/exec';
         
         // State management
@@ -697,35 +698,46 @@
         }
         
         async function loadQuestions() {
-            console.log('Loading questions from:', CSV_URL);
+            console.log('Loading questions from Google Sheets API...');
             
             try {
-                const response = await fetch(CSV_URL, {
+                const response = await fetch(SHEETS_API_URL, {
                     mode: 'cors',
-                    headers: { 'Accept': 'text/csv' }
+                    headers: { 'Accept': 'application/json' }
                 });
                 
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
-                const csv = await response.text();
-                return new Promise((resolve) => {
-                    Papa.parse(csv, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function(results) {
-                            allQuestions = results.data.filter(q => q.Question && q.Question.trim());
-                            console.log('✓ Loaded', allQuestions.length, 'questions');
-                            resolve();
-                        },
-                        error: function(err) {
-                            console.error('Parse error:', err);
-                            loadSampleData();
-                            resolve();
-                        }
-                    });
+                const data = await response.json();
+                
+                if (!data.values || data.values.length === 0) {
+                    throw new Error('No data in sheet');
+                }
+                
+                // Convert sheet data to question objects
+                const headers = data.values[0];
+                const headerMap = {};
+                headers.forEach((header, idx) => {
+                    headerMap[header] = idx;
                 });
+                
+                allQuestions = data.values.slice(1).map(row => ({
+                    Question: row[headerMap['Question']] || '',
+                    Scenario: row[headerMap['Scenario']] || '',
+                    Choice_A: row[headerMap['Choice_A']] || '',
+                    Choice_B: row[headerMap['Choice_B']] || '',
+                    Choice_C: row[headerMap['Choice_C']] || '',
+                    Choice_D: row[headerMap['Choice_D']] || '',
+                    Correct_Answer: row[headerMap['Correct_Answer']] || '',
+                    Explanation: row[headerMap['Explanation']] || '',
+                    Topic: row[headerMap['Topic']] || '',
+                    Source: row[headerMap['Source']] || ''
+                })).filter(q => q.Question && q.Question.trim());
+                
+                console.log('✓ Loaded', allQuestions.length, 'questions from Sheets API');
             } catch (err) {
                 console.error('Fetch error:', err);
+                console.log('Make sure you have added your Google Sheets API key to the SHEETS_API_KEY constant');
                 loadSampleData();
             }
         }
