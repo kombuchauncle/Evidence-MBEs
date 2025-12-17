@@ -767,7 +767,21 @@
         }
         
         function generateNewQuiz() {
-            const shuffled = allQuestions.map(q => ({...q}));
+            // Separate questions into seen (have topic) and unseen (no topic)
+            const unseenQuestions = allQuestions.filter(q => !q.Topic || q.Topic.trim() === '');
+            const seenQuestions = allQuestions.filter(q => q.Topic && q.Topic.trim() !== '');
+            
+            // Prioritize unseen questions
+            let quizPool = [];
+            if (unseenQuestions.length > 0) {
+                quizPool = unseenQuestions;
+            } else {
+                // If all questions are seen, use all questions
+                quizPool = allQuestions;
+            }
+            
+            // Shuffle
+            const shuffled = quizPool.map(q => ({...q}));
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -931,6 +945,7 @@
         async function updateGoogleSheet(question, topic, explanation) {
             console.log('Saving to Google Sheets via Apps Script...');
             console.log('Question:', question.Question.substring(0, 100));
+            console.log('Scenario:', question.Scenario ? question.Scenario.substring(0, 100) : 'none');
             console.log('Topic:', topic);
             console.log('Explanation:', explanation.substring(0, 100));
             
@@ -938,6 +953,7 @@
                 // Create JSON payload but send as text/plain to avoid CORS preflight
                 const payload = JSON.stringify({
                     question: question.Question,
+                    scenario: question.Scenario || '',
                     topic: topic,
                     explanation: explanation
                 });
