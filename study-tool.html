@@ -767,21 +767,8 @@
         }
         
         function generateNewQuiz() {
-            // Separate questions into seen (have topic) and unseen (no topic)
-            const unseenQuestions = allQuestions.filter(q => !q.Topic || q.Topic.trim() === '');
-            const seenQuestions = allQuestions.filter(q => q.Topic && q.Topic.trim() !== '');
-            
-            // Prioritize unseen questions
-            let quizPool = [];
-            if (unseenQuestions.length > 0) {
-                quizPool = unseenQuestions;
-            } else {
-                // If all questions are seen, use all questions
-                quizPool = allQuestions;
-            }
-            
-            // Shuffle
-            const shuffled = quizPool.map(q => ({...q}));
+            // Shuffle all questions randomly (true random, no prioritization)
+            const shuffled = allQuestions.map(q => ({...q}));
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
