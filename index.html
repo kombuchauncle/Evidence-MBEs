@@ -120,7 +120,7 @@
             padding: 25px;
             margin: 20px auto;
             background: rgba(255,255,255,0.4);
-            text-align: left; /* Keep questions left aligned */
+            text-align: left; /* Restored left alignment for content */
         }
 
         .quiz-q-number {
@@ -201,7 +201,7 @@
         /* Library mode */
         #libraryMode {
             animation: fadeIn 0.3s ease;
-            text-align: left;
+            text-align: left; /* Restored left alignment for library content */
         }
 
         .library-controls {
@@ -390,8 +390,15 @@
 
     <div id="libraryMode" class="hidden">
         <h2>question library</h2>
+
         <div class="library-controls">
-            <input type="text" class="search-box" id="searchBox" placeholder="search..." onkeyup="filterLibrary()">
+            <input
+                type="text"
+                class="search-box"
+                id="searchBox"
+                placeholder="search by question, topic, or scenario..."
+                onkeyup="filterLibrary()"
+            >
             <div class="filter-row">
                 <label>filter by source:</label>
                 <select id="sourceFilter" onchange="filterLibrary()">
@@ -399,7 +406,9 @@
                 </select>
             </div>
         </div>
+
         <div class="library-stats" id="libraryStats"></div>
+
         <div id="libraryContainer"></div>
     </div>
 
@@ -415,6 +424,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
     const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+
     let allQuestions = [];
     let currentQuiz = [];
     let libraryFilteredQuestions = [];
@@ -427,3 +437,130 @@
         generateNewQuiz();
         updateFooter();
     }
+
+    async function loadQuestions() {
+        try {
+            const response = await fetch(CSV_URL);
+            const csv = await response.text();
+            return new Promise((resolve) => {
+                Papa.parse(csv, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        allQuestions = results.data.filter(q => q.Question && q.Question.trim());
+                        resolve();
+                    }
+                });
+            });
+        } catch (err) {
+            console.error("Failed to load CSV:", err);
+        }
+    }
+
+    function updateSourceFilter() {
+        const sources = [...new Set(allQuestions.map(q => q.Source).filter(Boolean))];
+        const filterSelect = document.getElementById('sourceFilter');
+        filterSelect.innerHTML = '<option value="">all sources</option>' +
+            sources.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function generateNewQuiz() {
+        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+        currentQuiz = shuffled.slice(0, Math.min(10, shuffled.length));
+        displayAllQuestions();
+    }
+
+    function displayAllQuestions() {
+        const container = document.getElementById('quizQuestionsContainer');
+        if (currentQuiz.length === 0) {
+            container.innerHTML = '<p class="center-text">no questions available</p>';
+            return;
+        }
+
+        container.innerHTML = currentQuiz.map((q, idx) => `
+            <div class="quiz-question-card">
+                <div class="quiz-q-number"><b><i>question ${idx + 1} of ${currentQuiz.length}</i></b></div>
+                ${q.Scenario ? `<div class="quiz-q-scenario">${q.Scenario}</div>` : ''}
+                <div class="quiz-q-text">${q.Question}</div>
+                <div class="quiz-q-choices">
+                    <div class="quiz-q-choice"><strong>a.</strong> ${q.Choice_A}</div>
+                    <div class="quiz-q-choice"><strong>b.</strong> ${q.Choice_B}</div>
+                    <div class="quiz-q-choice"><strong>c.</strong> ${q.Choice_C}</div>
+                    <div class="quiz-q-choice"><strong>d.</strong> ${q.Choice_D}</div>
+                </div>
+                <button class="quiz-show-answer-btn" onclick="toggleQuizAnswer(this)">show answer</button>
+                <div class="quiz-answer-reveal">
+                    <div class="quiz-answer-label">answer: ${q.Correct_Answer}</div>
+                    ${q.Explanation ? `<div style="margin-top: 10px;"><b><i>explanation:</i></b> ${q.Explanation}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function toggleQuizAnswer(btn) {
+        const answerDiv = btn.nextElementSibling;
+        answerDiv.classList.toggle('visible');
+        btn.textContent = answerDiv.classList.contains('visible') ? 'hide answer' : 'show answer';
+    }
+
+    function filterLibrary() {
+        const search = document.getElementById('searchBox').value.toLowerCase();
+        const sourceFilter = document.getElementById('sourceFilter').value;
+
+        libraryFilteredQuestions = allQuestions.filter(q => {
+            const matchesSearch = !search || 
+                (q.Question && q.Question.toLowerCase().includes(search)) || 
+                (q.Scenario && q.Scenario.toLowerCase().includes(search));
+            const matchesSource = !sourceFilter || q.Source === sourceFilter;
+            return matchesSearch && matchesSource;
+        });
+
+        renderLibrary();
+    }
+
+    function renderLibrary() {
+        const container = document.getElementById('libraryContainer');
+        if (libraryFilteredQuestions.length === 0) {
+            container.innerHTML = '<div class="empty-message">no questions match your search</div>';
+            return;
+        }
+
+        container.innerHTML = libraryFilteredQuestions.map(q => `
+            <div class="question-card">
+                <div class="question-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div>
+                        <div class="question-card-title">${q.Question}</div>
+                        <div class="question-card-meta">${q.Source || ''}</div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="question-card-content">
+                    ${q.Scenario ? `<div class="card-scenario">${q.Scenario}</div>` : ''}
+                    <div class="card-choices">
+                        <div><strong>a.</strong> ${q.Choice_A}</div>
+                        <div><strong>b.</strong> ${q.Choice_B}</div>
+                    </div>
+                    <div class="card-answer">
+                        <div class="card-answer-label">answer: ${q.Correct_Answer}</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        document.getElementById('libraryStats').innerHTML = `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
+    }
+
+    function switchMode(mode) {
+        document.getElementById('quizMode').classList.toggle('hidden', mode !== 'quiz');
+        document.getElementById('libraryMode').classList.toggle('hidden', mode !== 'library');
+        const btns = document.querySelectorAll('.nav-btn');
+        btns[0].classList.toggle('active', mode === 'quiz');
+        btns[1].classList.toggle('active', mode === 'library');
+        if (mode === 'library') filterLibrary();
+    }
+
+    function updateFooter() {
+        document.getElementById('totalQuestionsFooter').innerHTML = `<strong>${allQuestions.length}</strong> total questions in bank`;
+    }
+</script>
+</body>
+</html>
