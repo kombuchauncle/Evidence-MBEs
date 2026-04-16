@@ -3,99 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
   <link rel="shortcut icon" href="favicon_io/favicon.ico">
 
-  <title>mbe evidence quiz</title>
-  <style>
-    /* Global Styles */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.5;
-      color: #333;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Centered Header Section */
-    .header-centered {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    /* Left-Aligned Content Section */
-    .content-left {
-      text-align: left;
-    }
-
-    .section-header {
-      font-weight: bold;
-      font-style: italic;
-      margin-top: 30px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 5px;
-    }
-
-    .btn-link {
-      background: none;
-      border: none;
-      color: #007bff;
-      text-decoration: underline;
-      cursor: pointer;
-      padding: 0;
-      font-size: inherit;
-    }
-
-    .resource-row a {
-      margin-right: 15px;
-      color: #007bff;
-    }
-
-    .hidden { display: none; }
-  </style>
+  <title>mbe evidence question bank</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="header-centered">
-    <h1>mbe evidence question bank</h1>
-    <p><small>made by grace kantrow</small></p>
-    <p><b>quiz mode</b></p>
-    <p><b>library</b></p>
-    <p><b>practice test</b></p>
-    <p>10 randomly generated questions from the library.</p>
-    <p><a href="#">view all questions in the library →</a></p>
-    <p><button class="btn-link">generate new quiz</button></p>
+<center>
+  <h1>mbe evidence question bank</h1>
+  <p><small>made by grace kantrow</small></p>
+  <p>quiz mode</p>
+  <p>library</p>
+  <p>practice test</p>
+  <p>10 randomly generated questions from the library.</p>
+  <p><a href="library.html">view all questions in the library →</a></p>
+  <p><button class="btn-link" onclick="generateQuiz()">generate new quiz</button></p>
+</center>
+
+<div id="quiz-container">
   </div>
 
-  <hr>
+<p class="section-header"><b><i>notes</i></b></p>
+<div style="text-align:left;font-size:0.9em;line-height:1.7;">
+  <p>Study the hearsay exceptions carefully. They are the most tested area of evidence.</p>
+</div>
 
-  <div class="content-left">
-    <p class="section-header">study materials</p>
-    <p>
-      The Federal Rules of Evidence (FRE) govern the admission of facts in federal court. 
-      Focus heavily on Hearsay, Relevancy, and Character Evidence as these comprise 
-      the bulk of the MBE questions.
-    </p>
+<center>
+  <p><img src="favicon_io/apple-touch-icon.png" width="40" height="40" alt="logo" style="mix-blend-mode: multiply;"></p>
+</center>
 
-    <p class="section-header">quick tips</p>
-    <ul>
-      <li><b>Hearsay:</b> Always ask: "Is it being offered for the truth of the matter asserted?"</li>
-      <li><b>Character:</b> Generally inadmissible in civil cases unless character is an essential element.</li>
-      <li><b>Impeachment:</b> Any party may impeach a witness, including the party calling them.</li>
-    </ul>
-
-    <p style="text-align: center; margin-top: 50px;">
-      <img src="favicon_io/apple-touch-icon.png" 
-           width="40" 
-           height="40" 
-           alt="logo" 
-           style="mix-blend-mode: multiply;">
-    </p>
-  </div>
-
+<script src="questions.js"></script>
+<script src="quiz.js"></script>
 </body>
 </html>
