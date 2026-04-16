@@ -1,655 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mbe evidence question bank</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon_io/favicon.ico">
 
-        body {
-            background-color: #e6f3ff;
-            background-image:
-                radial-gradient(ellipse 340px 210px at 12% 18%, rgba(255,255,255,0.65) 0%, transparent 70%),
-                radial-gradient(ellipse 220px 160px at 78% 8%,  rgba(255,255,255,0.45) 0%, transparent 70%),
-                radial-gradient(ellipse 280px 180px at 55% 52%, rgba(255,255,255,0.30) 0%, transparent 70%),
-                radial-gradient(ellipse 370px 220px at 22% 82%, rgba(255,255,255,0.50) 0%, transparent 70%),
-                radial-gradient(ellipse 200px 140px at 90% 65%, rgba(255,255,255,0.35) 0%, transparent 70%);
-            color: #000;
-            padding: 20px;
-            line-height: 1.6;
-        }
+  <title>mbe evidence quiz</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: normal;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+    /* Centered Header Section */
+    .header-centered {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-        h2 {
-            font-size: 1.5rem;
-            font-weight: normal;
-            margin: 30px 0 20px 0;
-            text-align: center;
-        }
+    /* Left-Aligned Content Section */
+    .content-left {
+      text-align: left;
+    }
 
-        .subtitle {
-            font-size: 0.95rem;
-            text-align: center;
-            margin: 5px 0;
-        }
+    .section-header {
+      font-weight: bold;
+      font-style: italic;
+      margin-top: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .btn-link {
+      background: none;
+      border: none;
+      color: #007bff;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+      font-size: inherit;
+    }
 
-        .center-text {
-            text-align: center;
-        }
+    .resource-row a {
+      margin-right: 15px;
+      color: #007bff;
+    }
 
-        /* Navigation */
-        .nav {
-            margin: 30px 0;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.4);
-            border: 2px outset #ffffff;
-            padding: 10px 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255,255,255,0.6);
-        }
-
-        .nav-btn:active,
-        .nav-btn.active {
-            border-style: inset;
-            background: rgba(255,255,255,0.6);
-        }
-
-        /* Quiz mode */
-        #quizMode {
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-        }
-
-        .quiz-header {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255,255,255,0.4);
-            border: 2px outset #ffffff;
-        }
-
-        .quiz-progress {
-            font-size: 1rem;
-            font-weight: bold;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        .quiz-question-card {
-            border: 2px outset #ffffff;
-            padding: 25px;
-            margin: 20px auto;
-            background: rgba(255,255,255,0.4);
-        }
-
-        .quiz-q-number {
-            font-weight: bold;
-            font-style: italic;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .quiz-q-scenario {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0,0,0,0.15);
-        }
-
-        .quiz-q-text {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin: 15px 0 20px 0;
-            line-height: 1.5;
-        }
-
-        .quiz-q-choices {
-            background: rgba(255,255,255,0.3);
-            padding: 15px;
-            margin: 15px 0;
-            border-left: 2px solid rgba(0,0,0,0.15);
-        }
-
-        .quiz-q-choice {
-            margin: 8px 0;
-            padding: 5px;
-        }
-
-        .quiz-show-answer-btn {
-            background: rgba(255,255,255,0.4);
-            border: 2px outset #ffffff;
-            color: #000;
-            font-weight: bold;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
-        .quiz-show-answer-btn:hover {
-            background: rgba(255,255,255,0.6);
-        }
-
-        .quiz-show-answer-btn:active {
-            border-style: inset;
-        }
-
-        .quiz-answer-reveal {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255,255,255,0.4);
-            border-left: 3px solid #000;
-            display: none;
-        }
-
-        .quiz-answer-reveal.visible {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .quiz-answer-label {
-            font-weight: bold;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        /* Library mode */
-        #libraryMode {
-            animation: fadeIn 0.3s ease;
-        }
-
-        .library-controls {
-            background: rgba(255,255,255,0.4);
-            border: 2px outset #ffffff;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #999;
-            background: rgba(255,255,255,0.6);
-            margin-bottom: 15px;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-row label {
-            font-weight: bold;
-            font-style: italic;
-        }
-
-        .filter-row select {
-            padding: 5px 10px;
-            border: 1px solid #999;
-            background: rgba(255,255,255,0.6);
-        }
-
-        .library-stats {
-            text-align: center;
-            font-size: 0.9rem;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(255,255,255,0.3);
-        }
-
-        .question-card {
-            border: 2px outset #ffffff;
-            padding: 20px;
-            margin: 15px 0;
-            background: rgba(255,255,255,0.4);
-            cursor: pointer;
-        }
-
-        .question-card:hover {
-            background: rgba(255,255,255,0.6);
-        }
-
-        .question-card.expanded {
-            background: rgba(255,255,255,0.6);
-            border-style: inset;
-        }
-
-        .question-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .question-card-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            flex: 1;
-        }
-
-        .question-card-meta {
-            font-size: 0.85rem;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        .question-card-content {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0,0,0,0.15);
-        }
-
-        .question-card.expanded .question-card-content {
-            display: block;
-        }
-
-        .card-scenario {
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .card-choices {
-            margin: 15px 0;
-            padding-left: 20px;
-        }
-
-        .card-choice {
-            margin: 8px 0;
-        }
-
-        .show-answer-btn {
-            background: rgba(255,255,255,0.4);
-            border: 2px outset #ffffff;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #000;
-            margin-top: 10px;
-        }
-
-        .show-answer-btn:hover {
-            background: rgba(255,255,255,0.6);
-        }
-
-        .show-answer-btn:active {
-            border-style: inset;
-        }
-
-        .card-answer {
-            background: rgba(255,255,255,0.4);
-            padding: 12px;
-            border-left: 3px solid #000;
-            margin-top: 15px;
-        }
-
-        .card-answer-label {
-            font-weight: bold;
-            font-style: italic;
-        }
-
-        .expand-icon {
-            font-weight: bold;
-            margin-left: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.85rem;
-            border-top: 1px solid #000;
-            padding-top: 20px;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            font-style: italic;
-        }
-    </style>
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
-<center>
+
+  <div class="header-centered">
     <h1>mbe evidence question bank</h1>
-    <p class="subtitle">made by grace kantrow</p>
+    <p><small>made by grace kantrow</small></p>
+    <p><b>quiz mode</b></p>
+    <p><b>library</b></p>
+    <p><b>practice test</b></p>
+    <p>10 randomly generated questions from the library.</p>
+    <p><a href="#">view all questions in the library →</a></p>
+    <p><button class="btn-link">generate new quiz</button></p>
+  </div>
 
-    <div class="container">
-        <!-- Navigation -->
-        <div class="nav">
-            <button class="nav-btn active" onclick="switchMode('quiz')">quiz mode</button>
-            <button class="nav-btn" onclick="switchMode('library')">library</button>
-        </div>
+  <hr>
 
-        <!-- QUIZ MODE -->
-        <div id="quizMode">
-            <div class="quiz-header">
-                <div class="quiz-progress">practice test</div>
-                <p style="margin: 15px 0; font-size: 0.95rem;">
-                    10 randomly generated questions from the library.<br>
-                    <a href="#" onclick="switchMode('library'); return false;">view all questions in the library →</a>
-                </p>
-                <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">generate new quiz</button>
-            </div>
+  <div class="content-left">
+    <p class="section-header">study materials</p>
+    <p>
+      The Federal Rules of Evidence (FRE) govern the admission of facts in federal court. 
+      Focus heavily on Hearsay, Relevancy, and Character Evidence as these comprise 
+      the bulk of the MBE questions.
+    </p>
 
-            <div id="quizQuestionsContainer"></div>
-        </div>
+    <p class="section-header">quick tips</p>
+    <ul>
+      <li><b>Hearsay:</b> Always ask: "Is it being offered for the truth of the matter asserted?"</li>
+      <li><b>Character:</b> Generally inadmissible in civil cases unless character is an essential element.</li>
+      <li><b>Impeachment:</b> Any party may impeach a witness, including the party calling them.</li>
+    </ul>
 
-        <!-- LIBRARY MODE -->
-        <div id="libraryMode" class="hidden">
-            <h2>question library</h2>
+    <p style="text-align: center; margin-top: 50px;">
+      <img src="favicon_io/apple-touch-icon.png" 
+           width="40" 
+           height="40" 
+           alt="logo" 
+           style="mix-blend-mode: multiply;">
+    </p>
+  </div>
 
-            <div class="library-controls">
-                <input
-                    type="text"
-                    class="search-box"
-                    id="searchBox"
-                    placeholder="search by question, topic, or scenario..."
-                    onkeyup="filterLibrary()"
-                >
-                <div class="filter-row">
-                    <label>filter by source:</label>
-                    <select id="sourceFilter" onchange="filterLibrary()">
-                        <option value="">all sources</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="library-stats" id="libraryStats"></div>
-
-            <div id="libraryContainer"></div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p id="totalQuestionsFooter"></p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">last updated: december 2025</p>
-        </div>
-    </div>
-</center>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script>
-        const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
-
-        let allQuestions = [];
-        let currentQuiz = [];
-        let libraryFilteredQuestions = [];
-
-        if (document.readyState !== 'loading') {
-            initializeApp();
-        } else {
-            document.addEventListener('DOMContentLoaded', initializeApp);
-        }
-
-        async function initializeApp() {
-            await loadQuestions();
-            updateSourceFilter();
-            generateNewQuiz();
-            updateFooter();
-        }
-
-        async function loadQuestions() {
-            try {
-                const response = await fetch(CSV_URL, {
-                    mode: 'cors',
-                    headers: { 'Accept': 'text/csv' }
-                });
-
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                const csv = await response.text();
-                return new Promise((resolve) => {
-                    Papa.parse(csv, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function(results) {
-                            allQuestions = results.data.filter(q => q.Question && q.Question.trim());
-                            resolve();
-                        },
-                        error: function(err) {
-                            loadSampleData();
-                            resolve();
-                        }
-                    });
-                });
-            } catch (err) {
-                loadSampleData();
-            }
-        }
-
-        function loadSampleData() {
-            allQuestions = [
-                {
-                    Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
-                    Scenario: "In a prosecution for aggravated battery, a police officer testified that when he arrested the defendant, he took a knife from the defendant and delivered it to the medical examiner. The medical examiner testified that the knife blade was consistent with the victim's wound but admitted on cross-examination that any number of other knives could also have caused the wound.",
-                    Choice_A: "No, because the probative worth of this evidence is for the jury to assess.",
-                    Choice_B: "Yes, because in light of the medical examiner's admission, his testimony has insufficient probative value.",
-                    Choice_C: "Yes, because the medical examiner could not state the probability that the wound was caused by the defendant's knife.",
-                    Choice_D: "Yes, because the probative value is substantially outweighed by the danger of unfair prejudice.",
-                    Correct_Answer: "B",
-                    Explanation: "Under FRE 403, evidence may be excluded if its probative value is substantially outweighed by the danger of unfair prejudice.",
-                    Source: "In-Class MBE"
-                },
-                {
-                    Question: "Which of the following standards of admissibility should the court apply to evidence proffered as relevant to prove whether a contract was formed?",
-                    Scenario: "In a civil action for breach of an oral contract, the defendant denied having entered into a contract with the plaintiff, although he admitted that he had discussed doing so.",
-                    Choice_A: "Whether a reasonable juror would find the evidence determinative of whether the contract was or was not formed.",
-                    Choice_B: "Whether the evidence has any tendency to make the fact of contract formation more or less probable than without the evidence.",
-                    Choice_C: "Whether the evidence is sufficient to prove, absent contrary evidence, that the contract was or was not formed.",
-                    Choice_D: "Whether the evidence makes it more likely than not that a contract was or was not formed.",
-                    Correct_Answer: "B",
-                    Explanation: "Relevance is defined as having any tendency to make a fact more or less probable.",
-                    Source: "In-Class MBE"
-                }
-            ];
-        }
-
-        function updateSourceFilter() {
-            const sources = [...new Set(allQuestions.map(q => q.Source).filter(Boolean))];
-            const filterSelect = document.getElementById('sourceFilter');
-            filterSelect.innerHTML = '<option value="">all sources</option>' +
-                sources.map(s => `<option value="${s}">${s}</option>`).join('');
-        }
-
-        function generateNewQuiz() {
-            // Shuffle all questions randomly (true random, no prioritization)
-            const shuffled = allQuestions.map(q => ({...q}));
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-
-            currentQuiz = shuffled.slice(0, Math.min(10, shuffled.length));
-            displayAllQuestions();
-        }
-
-        function displayAllQuestions() {
-            const container = document.getElementById('quizQuestionsContainer');
-
-            if (currentQuiz.length === 0) {
-                container.innerHTML = '<p class="center-text">no questions available</p>';
-                return;
-            }
-
-            const html = currentQuiz.map((q, idx) => `
-                <div class="quiz-question-card">
-                    <div class="quiz-q-number"><b><i>question ${idx + 1} of ${currentQuiz.length}</i></b></div>
-                    ${q.Scenario ? `<div class="quiz-q-scenario">${q.Scenario}</div>` : ''}
-                    <div class="quiz-q-text">${q.Question}</div>
-                    <div class="quiz-q-choices">
-                        <div class="quiz-q-choice"><strong>a.</strong> ${q.Choice_A}</div>
-                        <div class="quiz-q-choice"><strong>b.</strong> ${q.Choice_B}</div>
-                        <div class="quiz-q-choice"><strong>c.</strong> ${q.Choice_C}</div>
-                        <div class="quiz-q-choice"><strong>d.</strong> ${q.Choice_D}</div>
-                    </div>
-                    <button class="quiz-show-answer-btn" onclick="toggleQuizAnswer(this)">show answer</button>
-                    <div class="quiz-answer-reveal">
-                        <div class="quiz-answer-label">answer: ${q.Correct_Answer}</div>
-                        ${q.Explanation ? `<div style="margin-top: 10px;"><b><i>explanation:</i></b> ${q.Explanation}</div>` : ''}
-                        ${q.Topic ? `<div style="margin-top: 10px;"><b><i>topic:</i></b> ${q.Topic}</div>` : ''}
-                        ${q.Source ? `<div style="margin-top: 10px;"><b><i>source:</i></b> ${q.Source}</div>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-        }
-
-        function toggleQuizAnswer(btn) {
-            const answerDiv = btn.nextElementSibling;
-            answerDiv.classList.toggle('visible');
-            btn.textContent = answerDiv.classList.contains('visible') ? 'hide answer' : 'show answer';
-        }
-
-        // Library Mode
-        function filterLibrary() {
-            const search = document.getElementById('searchBox').value.toLowerCase();
-            const sourceFilter = document.getElementById('sourceFilter').value;
-
-            libraryFilteredQuestions = allQuestions.filter(q => {
-                const matchesSearch = !search ||
-                    (q.Question && q.Question.toLowerCase().includes(search)) ||
-                    (q.Scenario && q.Scenario.toLowerCase().includes(search)) ||
-                    (q.Source && q.Source.toLowerCase().includes(search));
-
-                const matchesSource = !sourceFilter || q.Source === sourceFilter;
-
-                return matchesSearch && matchesSource;
-            });
-
-            renderLibrary();
-        }
-
-        function renderLibrary() {
-            const container = document.getElementById('libraryContainer');
-
-            if (libraryFilteredQuestions.length === 0) {
-                container.innerHTML = '<div class="empty-message">no questions match your search</div>';
-                document.getElementById('libraryStats').innerHTML = 'no results';
-                return;
-            }
-
-            const html = libraryFilteredQuestions.map((q, idx) => `
-                <div class="question-card">
-                    <div class="question-card-header" onclick="toggleLibraryQuestion(this)">
-                        <div>
-                            <div class="question-card-title">${q.Question}</div>
-                            <div class="question-card-meta">${q.Source || ''}</div>
-                        </div>
-                        <div class="expand-icon">▼</div>
-                    </div>
-                    <div class="question-card-content">
-                        ${q.Scenario ? `<div class="card-scenario">${q.Scenario}</div>` : ''}
-                        <div class="card-choices">
-                            <div class="card-choice"><strong>a.</strong> ${q.Choice_A}</div>
-                            <div class="card-choice"><strong>b.</strong> ${q.Choice_B}</div>
-                            <div class="card-choice"><strong>c.</strong> ${q.Choice_C}</div>
-                            <div class="card-choice"><strong>d.</strong> ${q.Choice_D}</div>
-                        </div>
-                        <button class="show-answer-btn" onclick="toggleLibraryAnswer(event)">show answer</button>
-                        <div class="card-answer" style="display: none;">
-                            <div class="card-answer-label">answer: ${q.Correct_Answer}</div>
-                            ${q.Explanation ? `<div style="margin-top: 10px;">${q.Explanation}</div>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-            document.getElementById('libraryStats').innerHTML =
-                `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
-        }
-
-        function toggleLibraryQuestion(header) {
-            const card = header.closest('.question-card');
-            card.classList.toggle('expanded');
-
-            if (!card.classList.contains('expanded')) {
-                const answerDiv = card.querySelector('.card-answer');
-                const btn = card.querySelector('.show-answer-btn');
-                answerDiv.style.display = 'none';
-                btn.textContent = 'show answer';
-            }
-        }
-
-        function toggleLibraryAnswer(event) {
-            event.stopPropagation();
-            const btn = event.target;
-            const answerDiv = btn.nextElementSibling;
-
-            if (answerDiv.style.display === 'none') {
-                answerDiv.style.display = 'block';
-                btn.textContent = 'hide answer';
-            } else {
-                answerDiv.style.display = 'none';
-                btn.textContent = 'show answer';
-            }
-        }
-
-        function switchMode(mode) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            document.getElementById('quizMode').classList.add('hidden');
-            document.getElementById('libraryMode').classList.add('hidden');
-
-            if (mode === 'quiz') {
-                document.getElementById('quizMode').classList.remove('hidden');
-            } else {
-                document.getElementById('libraryMode').classList.remove('hidden');
-                filterLibrary();
-            }
-        }
-
-        function updateFooter() {
-            document.getElementById('totalQuestionsFooter').innerHTML =
-                `<strong>${allQuestions.length}</strong> total questions in bank`;
-        }
-    </script>
 </body>
 </html>
