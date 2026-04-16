@@ -120,6 +120,7 @@
             padding: 25px;
             margin: 20px auto;
             background: rgba(255,255,255,0.4);
+            text-align: left; /* Keep questions left aligned */
         }
 
         .quiz-q-number {
@@ -138,4 +139,291 @@
         .quiz-q-text {
             font-size: 1.1rem;
             font-weight: bold;
-            margin
+            margin: 15px 0 20px 0;
+            line-height: 1.5;
+        }
+
+        .quiz-q-choices {
+            background: rgba(255,255,255,0.3);
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 2px solid rgba(0,0,0,0.15);
+        }
+
+        .quiz-q-choice {
+            margin: 8px 0;
+            padding: 5px;
+        }
+
+        .quiz-show-answer-btn {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            color: #000;
+            font-weight: bold;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .quiz-show-answer-btn:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .quiz-show-answer-btn:active {
+            border-style: inset;
+        }
+
+        .quiz-answer-reveal {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.4);
+            border-left: 3px solid #000;
+            display: none;
+        }
+
+        .quiz-answer-reveal.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-answer-label {
+            font-weight: bold;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        /* Library mode */
+        #libraryMode {
+            animation: fadeIn 0.3s ease;
+            text-align: left;
+        }
+
+        .library-controls {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
+            margin-bottom: 15px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-row label {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .filter-row select {
+            padding: 5px 10px;
+            border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .library-stats {
+            text-align: center;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .question-card {
+            border: 2px outset #ffffff;
+            padding: 20px;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .question-card.expanded {
+            background: rgba(255,255,255,0.6);
+            border-style: inset;
+        }
+
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .question-card-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .question-card-meta {
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .question-card-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .question-card.expanded .question-card-content {
+            display: block;
+        }
+
+        .card-scenario {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .card-choices {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .card-choice {
+            margin: 8px 0;
+        }
+
+        .show-answer-btn {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #000;
+            margin-top: 10px;
+        }
+
+        .show-answer-btn:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .show-answer-btn:active {
+            border-style: inset;
+        }
+
+        .card-answer {
+            background: rgba(255,255,255,0.4);
+            padding: 12px;
+            border-left: 3px solid #000;
+            margin-top: 15px;
+        }
+
+        .card-answer-label {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .expand-icon {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid #000;
+            padding-top: 20px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<center>
+    <h1>mbe evidence question bank</h1>
+    <p class="subtitle">made by grace kantrow</p>
+
+    <div class="nav">
+        <button class="nav-btn active" onclick="switchMode('quiz')">quiz mode</button>
+        <button class="nav-btn" onclick="switchMode('library')">library</button>
+    </div>
+</center>
+
+<div class="container">
+    <div id="quizMode">
+        <center>
+            <div class="quiz-header">
+                <div class="quiz-progress">practice test</div>
+                <p style="margin: 15px 0; font-size: 0.95rem;">
+                    10 randomly generated questions from the library.<br>
+                    <a href="#" onclick="switchMode('library'); return false;">view all questions in the library →</a>
+                </p>
+                <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">generate new quiz</button>
+            </div>
+        </center>
+        <div id="quizQuestionsContainer"></div>
+    </div>
+
+    <div id="libraryMode" class="hidden">
+        <h2>question library</h2>
+        <div class="library-controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="search..." onkeyup="filterLibrary()">
+            <div class="filter-row">
+                <label>filter by source:</label>
+                <select id="sourceFilter" onchange="filterLibrary()">
+                    <option value="">all sources</option>
+                </select>
+            </div>
+        </div>
+        <div class="library-stats" id="libraryStats"></div>
+        <div id="libraryContainer"></div>
+    </div>
+
+    <div class="footer">
+        <p id="totalQuestionsFooter"></p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">last updated: december 2025</p>
+        <center>
+            <p><img src="favicon_io/apple-touch-icon.png" width="40" height="40" alt="logo" style="mix-blend-mode: multiply; margin-top:20px;"></p>
+        </center>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+    const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+    let allQuestions = [];
+    let currentQuiz = [];
+    let libraryFilteredQuestions = [];
+
+    document.addEventListener('DOMContentLoaded', initializeApp);
+
+    async function initializeApp() {
+        await loadQuestions();
+        updateSourceFilter();
+        generateNewQuiz();
+        updateFooter();
+    }
