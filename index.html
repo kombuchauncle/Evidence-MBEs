@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
     <link rel="shortcut icon" href="favicon_io/favicon.ico">
-
     <title>mbe evidence question bank</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             background-color: #e6f3ff;
@@ -24,14 +26,39 @@
             color: #000;
             padding: 20px;
             line-height: 1.6;
-            font-family: sans-serif;
         }
 
-        h1 { font-size: 2.5rem; font-weight: normal; margin-bottom: 10px; text-align: center; }
-        .subtitle { font-size: 0.95rem; text-align: center; margin: 5px 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: normal;
+            margin-bottom: 10px;
+        }
 
-        .nav { margin: 30px 0; text-align: center; display: flex; justify-content: center; gap: 20px; }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: normal;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            margin: 5px 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
         .nav-btn {
             background: rgba(255,255,255,0.4);
             border: 2px outset #ffffff;
@@ -39,15 +66,85 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
+            color: #000;
         }
-        .nav-btn.active { border-style: inset; background: rgba(255,255,255,0.6); }
 
-        .quiz-question-card, .question-card {
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .nav-btn:active,
+        .nav-btn.active {
+            border-style: inset;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .controls-box {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-row label {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .filter-row select {
+            padding: 5px 10px;
+            border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .library-stats {
+            font-size: 0.85rem;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        /* Quiz question cards */
+        .quiz-question-card {
             border: 2px outset #ffffff;
             padding: 25px;
             margin: 20px 0;
             background: rgba(255,255,255,0.4);
-            text-align: left;
+        }
+
+        .quiz-q-number {
+            font-weight: bold;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .quiz-q-scenario {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .quiz-q-text {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .choices-area {
@@ -57,17 +154,117 @@
             border-left: 2px solid rgba(0,0,0,0.15);
         }
 
-        .question-card { cursor: pointer; }
-        .question-card-header { display: flex; justify-content: space-between; align-items: center; }
-        .question-card-content { display: none; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px; }
-        .question-card.expanded .question-card-content { display: block; }
-        
-        .controls-box { background: rgba(255,255,255,0.4); border: 2px outset #ffffff; padding: 20px; margin: 20px 0; text-align: center; }
-        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #999; }
-        
-        .answer-box { background: rgba(255,255,255,0.5); padding: 10px; margin-top: 10px; border-left: 3px solid #000; }
-        .hidden { display: none; }
-        .footer { margin-top: 50px; text-align: center; border-top: 1px solid #000; padding-top: 20px; }
+        .choices-area div {
+            margin: 6px 0;
+        }
+
+        .show-answer-btn {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #000;
+            margin-top: 5px;
+        }
+
+        .show-answer-btn:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .show-answer-btn:active {
+            border-style: inset;
+        }
+
+        .answer-box {
+            background: rgba(255,255,255,0.4);
+            padding: 12px 15px;
+            margin-top: 12px;
+            border-left: 3px solid #000;
+        }
+
+        .answer-box div {
+            margin-top: 6px;
+        }
+
+        /* Library cards */
+        .question-card {
+            border: 2px outset #ffffff;
+            padding: 20px;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .question-card.expanded {
+            background: rgba(255,255,255,0.6);
+            border-style: inset;
+        }
+
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .question-card-title {
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .question-card-meta {
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .expand-icon {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .question-card-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .question-card.expanded .question-card-content {
+            display: block;
+        }
+
+        .card-scenario {
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid #000;
+            padding-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        #quizMode, #libraryMode {
+            animation: fadeIn 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -76,142 +273,198 @@
     <h1>mbe evidence question bank</h1>
     <p class="subtitle">made by grace kantrow</p>
     <div class="nav">
-        <button class="nav-btn active" onclick="switchMode('quiz')">quiz mode</button>
-        <button class="nav-btn" onclick="switchMode('library')">library</button>
+        <button class="nav-btn active" onclick="switchMode('quiz', event)">quiz mode</button>
+        <button class="nav-btn" onclick="switchMode('library', event)">library</button>
     </div>
 </center>
 
 <div class="container">
+
+    <!-- QUIZ MODE -->
     <div id="quizMode">
         <div class="controls-box">
-            <div style="font-weight: bold; font-style: italic;">practice test</div>
-            <p style="margin: 10px 0; font-size: 0.9rem;">10 random questions from the bank</p>
-            <button class="nav-btn" style="font-size: 0.9rem;" onclick="generateNewQuiz()">generate new quiz</button>
+            <div style="font-weight: bold; font-style: italic; margin-bottom: 8px;">practice test</div>
+            <p style="margin-bottom: 12px; font-size: 0.9rem;">10 randomly generated questions from the library</p>
+            <button class="nav-btn" onclick="generateNewQuiz()">generate new quiz</button>
         </div>
         <div id="quizQuestionsContainer"></div>
     </div>
 
+    <!-- LIBRARY MODE -->
     <div id="libraryMode" class="hidden">
-        <h2 style="text-align: center; margin-bottom: 20px;">question library</h2>
-        <div class="controls-box">
-            <input type="text" class="search-box" id="searchBox" placeholder="search questions or scenarios..." onkeyup="filterLibrary()">
-            <select id="sourceFilter" onchange="filterLibrary()" style="width: 100%; padding: 5px;">
-                <option value="">all sources</option>
-            </select>
+        <h2>question library</h2>
+        <div class="controls-box" style="text-align: left;">
+            <input type="text" class="search-box" id="searchBox" placeholder="search questions, topics, or scenarios..." onkeyup="filterLibrary()">
+            <div class="filter-row">
+                <label>filter by source:</label>
+                <select id="sourceFilter" onchange="filterLibrary()">
+                    <option value="">all sources</option>
+                </select>
+            </div>
         </div>
-        <div id="libraryStats" style="text-align: center; font-size: 0.8rem; margin-bottom: 10px;"></div>
+        <div class="library-stats" id="libraryStats"></div>
         <div id="libraryContainer"></div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
         <p id="totalQuestionsFooter"></p>
-        <center>
-            <img src="favicon_io/apple-touch-icon.png" width="40" style="mix-blend-mode: multiply; margin-top:20px;">
-        </center>
+        <p style="margin-top: 8px; font-size: 0.8rem;">last updated: december 2025</p>
+        <p style="margin-top: 16px;"><img src="favicon_io/apple-touch-icon.png" width="40" height="40" alt="logo" style="mix-blend-mode: multiply;"></p>
     </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
     const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
+
     let allQuestions = [];
+    let libraryFilteredQuestions = [];
+
+    document.addEventListener('DOMContentLoaded', initializeApp);
 
     async function initializeApp() {
         try {
-            const response = await fetch(CSV_URL);
+            const response = await fetch(CSV_URL, { mode: 'cors', headers: { 'Accept': 'text/csv' } });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const csv = await response.text();
-            Papa.parse(csv, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                    allQuestions = results.data.filter(q => q.Question);
-                    updateSourceFilter();
-                    generateNewQuiz();
-                    updateFooter();
-                }
+            await new Promise(resolve => {
+                Papa.parse(csv, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: results => {
+                        allQuestions = results.data.filter(q => q.Question && q.Question.trim());
+                        resolve();
+                    },
+                    error: () => { loadSampleData(); resolve(); }
+                });
             });
-        } catch (e) { console.error("Load error:", e); }
+        } catch (e) {
+            loadSampleData();
+        }
+        updateSourceFilter();
+        generateNewQuiz();
+        updateFooter();
+    }
+
+    function loadSampleData() {
+        allQuestions = [
+            {
+                Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
+                Scenario: "In a prosecution for aggravated battery, a police officer testified that when he arrested the defendant, he took a knife from the defendant and delivered it to the medical examiner. The medical examiner testified that the knife blade was consistent with the victim's wound but admitted on cross-examination that any number of other knives could also have caused the wound.",
+                Choice_A: "No, because the probative worth of this evidence is for the jury to assess.",
+                Choice_B: "Yes, because in light of the medical examiner's admission, his testimony has insufficient probative value.",
+                Choice_C: "Yes, because the medical examiner could not state the probability that the wound was caused by the defendant's knife.",
+                Choice_D: "Yes, because the probative value is substantially outweighed by the danger of unfair prejudice.",
+                Correct_Answer: "B",
+                Explanation: "Under FRE 403, evidence may be excluded if its probative value is substantially outweighed by the danger of unfair prejudice.",
+                Topic: "FRE 403",
+                Source: "In-Class MBE"
+            }
+        ];
     }
 
     function updateSourceFilter() {
         const sources = [...new Set(allQuestions.map(q => q.Source).filter(Boolean))];
         const select = document.getElementById('sourceFilter');
-        sources.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = opt.textContent = s;
-            select.appendChild(opt);
-        });
+        select.innerHTML = '<option value="">all sources</option>' +
+            sources.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
     function generateNewQuiz() {
-        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
-        const container = document.getElementById('quizQuestionsContainer');
-        container.innerHTML = shuffled.map((q, i) => `
+        const shuffled = allQuestions.map(q => ({...q}));
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        const quiz = shuffled.slice(0, Math.min(10, shuffled.length));
+
+        document.getElementById('quizQuestionsContainer').innerHTML = quiz.map((q, i) => `
             <div class="quiz-question-card">
-                <div style="font-style: italic; font-size: 0.8rem; margin-bottom: 10px;">question ${i+1} of 10</div>
-                ${q.Scenario ? `<div style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px;">${q.Scenario}</div>` : ''}
-                <div style="font-weight: bold; margin-bottom: 15px;">${q.Question}</div>
+                <div class="quiz-q-number"><b><i>question ${i + 1} of ${quiz.length}</i></b></div>
+                ${q.Scenario ? `<div class="quiz-q-scenario">${q.Scenario}</div>` : ''}
+                <div class="quiz-q-text">${q.Question}</div>
                 <div class="choices-area">
-                    <div>A. ${q.Choice_A}</div><div>B. ${q.Choice_B}</div>
-                    <div>C. ${q.Choice_C}</div><div>D. ${q.Choice_D}</div>
+                    <div><b>a.</b> ${q.Choice_A}</div>
+                    <div><b>b.</b> ${q.Choice_B}</div>
+                    <div><b>c.</b> ${q.Choice_C}</div>
+                    <div><b>d.</b> ${q.Choice_D}</div>
                 </div>
-                <button class="nav-btn" style="font-size: 0.8rem; padding: 5px 10px;" onclick="toggleVisibility(this)">show answer</button>
+                <button class="show-answer-btn" onclick="toggleAnswer(this)">show answer</button>
                 <div class="answer-box hidden">
-                    <b>Answer: ${q.Correct_Answer}</b><br><small>${q.Explanation || ''}</small>
+                    <div><b><i>answer:</i></b> ${q.Correct_Answer}</div>
+                    ${q.Explanation ? `<div><b><i>explanation:</i></b> ${q.Explanation}</div>` : ''}
+                    ${q.Topic ? `<div><b><i>topic:</i></b> ${q.Topic}</div>` : ''}
+                    ${q.Source ? `<div><b><i>source:</i></b> ${q.Source}</div>` : ''}
                 </div>
             </div>
         `).join('');
-        window.scrollTo(0,0);
     }
 
-    function toggleVisibility(btn) {
-        const target = btn.nextElementSibling;
-        target.classList.toggle('hidden');
-        btn.textContent = target.classList.contains('hidden') ? 'show answer' : 'hide answer';
+    function toggleAnswer(btn) {
+        const box = btn.nextElementSibling;
+        box.classList.toggle('hidden');
+        btn.textContent = box.classList.contains('hidden') ? 'show answer' : 'hide answer';
     }
 
     function filterLibrary() {
         const term = document.getElementById('searchBox').value.toLowerCase();
         const src = document.getElementById('sourceFilter').value;
-        const filtered = allQuestions.filter(q => 
-            (q.Question.toLowerCase().includes(term) || (q.Scenario && q.Scenario.toLowerCase().includes(term))) &&
+
+        libraryFilteredQuestions = allQuestions.filter(q =>
+            (!term ||
+                (q.Question && q.Question.toLowerCase().includes(term)) ||
+                (q.Scenario && q.Scenario.toLowerCase().includes(term)) ||
+                (q.Topic && q.Topic.toLowerCase().includes(term)) ||
+                (q.Source && q.Source.toLowerCase().includes(term))
+            ) &&
             (!src || q.Source === src)
         );
-        
-        const container = document.getElementById('libraryContainer');
-        document.getElementById('libraryStats').textContent = `showing ${filtered.length} questions`;
-        container.innerHTML = filtered.map(q => `
+
+        document.getElementById('libraryStats').textContent =
+            `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
+
+        document.getElementById('libraryContainer').innerHTML = libraryFilteredQuestions.map(q => `
             <div class="question-card" onclick="this.classList.toggle('expanded')">
                 <div class="question-card-header">
-                    <div style="font-weight: bold; flex: 1;">${q.Question}</div>
-                    <div style="margin-left: 10px;">▼</div>
+                    <div>
+                        <div class="question-card-title">${q.Question}</div>
+                        ${q.Source ? `<div class="question-card-meta">${q.Source}</div>` : ''}
+                    </div>
+                    <div class="expand-icon">▼</div>
                 </div>
                 <div class="question-card-content">
-                    ${q.Scenario ? `<div style="margin-bottom: 10px; font-style: italic;">${q.Scenario}</div>` : ''}
+                    ${q.Scenario ? `<div class="card-scenario">${q.Scenario}</div>` : ''}
                     <div class="choices-area">
-                        <div>A. ${q.Choice_A}</div><div>B. ${q.Choice_B}</div>
-                        <div>C. ${q.Choice_C}</div><div>D. ${q.Choice_D}</div>
+                        <div><b>a.</b> ${q.Choice_A}</div>
+                        <div><b>b.</b> ${q.Choice_B}</div>
+                        <div><b>c.</b> ${q.Choice_C}</div>
+                        <div><b>d.</b> ${q.Choice_D}</div>
                     </div>
-                    <div class="answer-box"><b>Correct: ${q.Correct_Answer}</b></div>
+                    <div class="answer-box">
+                        <div><b><i>answer:</i></b> ${q.Correct_Answer}</div>
+                        ${q.Explanation ? `<div><b><i>explanation:</i></b> ${q.Explanation}</div>` : ''}
+                        ${q.Topic ? `<div><b><i>topic:</i></b> ${q.Topic}</div>` : ''}
+                        ${q.Source ? `<div><b><i>source:</i></b> ${q.Source}</div>` : ''}
+                    </div>
                 </div>
             </div>
         `).join('');
     }
 
-    function switchMode(mode) {
+    function switchMode(mode, e) {
         document.getElementById('quizMode').classList.toggle('hidden', mode !== 'quiz');
         document.getElementById('libraryMode').classList.toggle('hidden', mode !== 'library');
-        const btns = document.querySelectorAll('.nav-btn');
-        btns[0].classList.toggle('active', mode === 'quiz');
-        btns[1].classList.toggle('active', mode === 'library');
-        if(mode === 'library') filterLibrary();
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        if (mode === 'library') filterLibrary();
     }
 
     function updateFooter() {
-        document.getElementById('totalQuestionsFooter').innerHTML = `<b>${allQuestions.length}</b> total questions in bank`;
+        document.getElementById('totalQuestionsFooter').innerHTML =
+            `<b>${allQuestions.length}</b> total questions in bank`;
     }
-
-    document.addEventListener('DOMContentLoaded', initializeApp);
 </script>
 </body>
 </html>
