@@ -10,58 +10,51 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            background-color: #e6f2ff;
-            font-family: 'Times New Roman', Times, serif;
+            background-color: #e6f3ff;
+            background-image:
+                radial-gradient(ellipse 340px 210px at 12% 18%, rgba(255,255,255,0.65) 0%, transparent 70%),
+                radial-gradient(ellipse 220px 160px at 78% 8%,  rgba(255,255,255,0.45) 0%, transparent 70%),
+                radial-gradient(ellipse 280px 180px at 55% 52%, rgba(255,255,255,0.30) 0%, transparent 70%),
+                radial-gradient(ellipse 370px 220px at 22% 82%, rgba(255,255,255,0.50) 0%, transparent 70%),
+                radial-gradient(ellipse 200px 140px at 90% 65%, rgba(255,255,255,0.35) 0%, transparent 70%);
             color: #000;
-            padding: 40px 20px;
+            padding: 20px;
             line-height: 1.6;
         }
-        
+
         h1 {
             font-size: 2.5rem;
             font-weight: normal;
             margin-bottom: 10px;
             text-align: center;
         }
-        
+
         h2 {
             font-size: 1.5rem;
             font-weight: normal;
             margin: 30px 0 20px 0;
             text-align: center;
         }
-        
+
         .subtitle {
             font-size: 0.95rem;
             text-align: center;
             margin: 5px 0;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
+            padding: 0 20px;
         }
-        
+
         .center-text {
             text-align: center;
         }
-        
-        a {
-            color: #551a8b;
-            text-decoration: underline;
-        }
-        
-        a:visited {
-            color: #551a8b;
-        }
-        
-        a:hover {
-            color: #0000ee;
-        }
-        
-        /* Navigation/Mode Toggle */
+
+        /* Navigation */
         .nav {
             margin: 30px 0;
             text-align: center;
@@ -70,563 +63,331 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-        
+
         .nav-btn {
-            background: #fff;
-            border: 2px solid #000;
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
             padding: 10px 25px;
             cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
             font-size: 1rem;
-            transition: all 0.2s ease;
+            font-weight: bold;
+            color: #000;
         }
-        
+
         .nav-btn:hover {
-            background: #f0f0f0;
+            background: rgba(255,255,255,0.6);
         }
-        
+
+        .nav-btn:active,
         .nav-btn.active {
-            background: #551a8b;
-            color: #fff;
+            border-style: inset;
+            background: rgba(255,255,255,0.6);
         }
-        
-        /* Status indicator */
-        .status-bar {
-            background: #fff;
-            border: 1px solid #999;
-            padding: 10px 15px;
-            margin: 15px 0;
-            font-size: 0.9rem;
-            color: #666;
-            text-align: center;
-        }
-        
-        .status-bar.saving {
-            background: #fff9e6;
-            color: #996600;
-        }
-        
-        .status-bar.saved {
-            background: #e6ffe6;
-            color: #006600;
-        }
-        
-        .status-bar.error {
-            background: #ffe6e6;
-            color: #660000;
-        }
-        
-        /* Quiz Mode */
+
+        /* Quiz mode */
         #quizMode {
             animation: fadeIn 0.3s ease;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; }
-            to { opacity: 1; }
+            to   { opacity: 1; }
         }
-        
+
         .quiz-header {
             text-align: center;
             margin: 30px 0;
             padding: 20px;
-            background: #fff;
-            border: 1px solid #999;
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
         }
-        
+
         .quiz-progress {
             font-size: 1rem;
-            color: #666;
+            font-weight: bold;
+            font-style: italic;
             margin-bottom: 10px;
         }
-        
-        .quiz-counter {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .quiz-container {
-            background: #fff;
-            border: 1px solid #999;
-            padding: 40px 30px;
-            margin: 30px 0;
-        }
-        
-        .scenario {
-            color: #666;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .question-text {
-            font-size: 1.15rem;
-            font-weight: bold;
-            margin: 20px 0 30px 0;
-            line-height: 1.5;
-        }
-        
-        .choices {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 30px 0;
-        }
-        
-        .choice {
-            padding: 12px 15px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: #fff;
-        }
-        
-        .choice:hover {
-            background: #f9f9f9;
-            border-color: #551a8b;
-        }
-        
-        .choice-letter {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .answer-reveal {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #551a8b;
-            display: none;
-        }
-        
-        .answer-reveal.visible {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .correct-answer {
-            color: #2d5016;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-        
-        .explanation {
-            background: #f5f5f5;
-            padding: 15px;
-            border-left: 3px solid #551a8b;
-            margin-top: 10px;
-            color: #333;
-        }
-        
-        .explanation-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .show-answer-btn {
-            background: #fff;
-            border: 1px solid #000;
-            padding: 10px 25px;
-            cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 0.95rem;
-            margin: 20px 0;
-            transition: all 0.2s ease;
-        }
-        
-        .show-answer-btn:hover {
-            background: #f0f0f0;
-        }
-        
-        .show-answer-btn.hidden-answer:after {
-            content: " ▼";
-        }
-        
+
         .quiz-question-card {
-            border: 1px solid #999;
+            border: 2px outset #ffffff;
             padding: 25px;
             margin: 20px auto;
-            background: #fff;
-            max-width: 800px;
-            border-left: 4px solid #551a8b;
+            background: rgba(255,255,255,0.4);
         }
-        
+
         .quiz-q-number {
             font-weight: bold;
-            color: #551a8b;
+            font-style: italic;
             font-size: 0.9rem;
             margin-bottom: 10px;
         }
-        
+
         .quiz-q-scenario {
-            color: #666;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
         }
-        
+
         .quiz-q-text {
             font-size: 1.1rem;
             font-weight: bold;
             margin: 15px 0 20px 0;
             line-height: 1.5;
         }
-        
+
         .quiz-q-choices {
-            background: #f9f9f9;
+            background: rgba(255,255,255,0.3);
             padding: 15px;
             margin: 15px 0;
-            border-left: 2px solid #ccc;
+            border-left: 2px solid rgba(0,0,0,0.15);
         }
-        
+
         .quiz-q-choice {
             margin: 8px 0;
             padding: 5px;
         }
-        
+
         .quiz-show-answer-btn {
-            background: #fff;
-            border: 1px solid #551a8b;
-            color: #551a8b;
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            color: #000;
+            font-weight: bold;
             padding: 8px 15px;
             cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
             font-size: 0.9rem;
             margin-top: 10px;
-            transition: all 0.2s ease;
         }
-        
+
         .quiz-show-answer-btn:hover {
-            background: #551a8b;
-            color: #fff;
+            background: rgba(255,255,255,0.6);
         }
-        
+
+        .quiz-show-answer-btn:active {
+            border-style: inset;
+        }
+
         .quiz-answer-reveal {
             margin-top: 15px;
             padding: 15px;
-            background: #f5f5f5;
-            border-left: 3px solid #2d5016;
+            background: rgba(255,255,255,0.4);
+            border-left: 3px solid #000;
             display: none;
-            animation: slideDown 0.3s ease;
         }
-        
+
         .quiz-answer-reveal.visible {
             display: block;
+            animation: slideDown 0.3s ease;
         }
-        
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         .quiz-answer-label {
-            color: #2d5016;
             font-weight: bold;
+            font-style: italic;
             margin-bottom: 10px;
         }
-        
-        .explanation-input-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-left: 3px solid #551a8b;
-        }
-        
-        .explanation-input-label {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-            color: #551a8b;
-        }
-        
-        .explanation-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 0.9rem;
-            resize: vertical;
-            min-height: 60px;
-            margin-bottom: 10px;
-        }
-        
-        .explanation-input:focus {
-            outline: none;
-            border-color: #551a8b;
-            box-shadow: 0 0 5px rgba(85, 26, 139, 0.3);
-        }
-        
-        .topic-input {
-            min-height: auto !important;
-            padding: 8px !important;
-        }
-        
-        .explanation-save-btn {
-            background: #fff;
-            border: 1px solid #551a8b;
-            color: #551a8b;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-        
-        .explanation-save-btn:hover {
-            background: #551a8b;
-            color: #fff;
-        }
-        
-        .explanation-save-btn.saving {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .save-indicator {
-            font-size: 0.85rem;
-            margin-left: 10px;
-            display: none;
-        }
-        
-        .save-indicator.saving {
-            display: inline;
-            color: #996600;
-        }
-        
-        .save-indicator.saved {
-            display: inline;
-            color: #006600;
-        }
-        
-        .quiz-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            gap: 15px;
-        }
-        
-        .quiz-nav button {
-            background: #fff;
-            border: 1px solid #000;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-        
-        .quiz-nav button:hover {
-            background: #f0f0f0;
-        }
-        
-        .quiz-nav button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .new-quiz-btn {
-            background: #551a8b !important;
-            color: #fff !important;
-        }
-        
-        .new-quiz-btn:hover {
-            background: #6b2a9b !important;
-        }
-        
-        /* Library Mode */
+
+        /* Library mode */
         #libraryMode {
             animation: fadeIn 0.3s ease;
         }
-        
+
         .library-controls {
-            background: #fff;
-            border: 1px solid #999;
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
             padding: 20px;
             margin: 20px 0;
         }
-        
+
         .search-box {
             width: 100%;
             padding: 10px;
-            font-family: 'Times New Roman', Times, serif;
             font-size: 1rem;
             border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
             margin-bottom: 15px;
         }
-        
+
         .filter-row {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
         }
-        
+
         .filter-row label {
             font-weight: bold;
+            font-style: italic;
         }
-        
+
         .filter-row select {
-            font-family: 'Times New Roman', Times, serif;
             padding: 5px 10px;
             border: 1px solid #999;
+            background: rgba(255,255,255,0.6);
         }
-        
+
         .library-stats {
             text-align: center;
             font-size: 0.9rem;
-            color: #666;
             margin: 15px 0;
             padding: 10px;
-            background: #f9f9f9;
+            background: rgba(255,255,255,0.3);
         }
-        
+
         .question-card {
-            border: 1px solid #999;
+            border: 2px outset #ffffff;
             padding: 20px;
             margin: 15px 0;
-            background: #fff;
+            background: rgba(255,255,255,0.4);
             cursor: pointer;
-            transition: all 0.2s ease;
         }
-        
+
         .question-card:hover {
-            border-color: #551a8b;
-            box-shadow: 0 2px 8px rgba(85, 26, 139, 0.1);
+            background: rgba(255,255,255,0.6);
         }
-        
+
         .question-card.expanded {
-            border-color: #551a8b;
-            background: #fafafa;
+            background: rgba(255,255,255,0.6);
+            border-style: inset;
         }
-        
+
         .question-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
         }
-        
+
         .question-card-title {
             font-weight: bold;
             margin-bottom: 8px;
             flex: 1;
         }
-        
+
         .question-card-meta {
             font-size: 0.85rem;
-            color: #999;
+            font-style: italic;
             margin-bottom: 10px;
         }
-        
+
         .question-card-content {
             display: none;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid rgba(0,0,0,0.15);
         }
-        
+
         .question-card.expanded .question-card-content {
             display: block;
         }
-        
+
         .card-scenario {
-            color: #666;
             margin-bottom: 15px;
             line-height: 1.5;
         }
-        
+
         .card-choices {
             margin: 15px 0;
             padding-left: 20px;
         }
-        
+
         .card-choice {
             margin: 8px 0;
         }
-        
+
+        .show-answer-btn {
+            background: rgba(255,255,255,0.4);
+            border: 2px outset #ffffff;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #000;
+            margin-top: 10px;
+        }
+
+        .show-answer-btn:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .show-answer-btn:active {
+            border-style: inset;
+        }
+
         .card-answer {
-            background: #f5f5f5;
+            background: rgba(255,255,255,0.4);
             padding: 12px;
-            border-left: 3px solid #551a8b;
+            border-left: 3px solid #000;
             margin-top: 15px;
         }
-        
+
         .card-answer-label {
-            color: #2d5016;
             font-weight: bold;
+            font-style: italic;
         }
-        
+
         .expand-icon {
-            color: #551a8b;
             font-weight: bold;
             margin-left: 10px;
         }
-        
+
         .hidden {
             display: none;
         }
-        
+
         .footer {
             margin-top: 50px;
             text-align: center;
             font-size: 0.85rem;
-            color: #666;
-            border-top: 1px solid #999;
+            border-top: 1px solid #000;
             padding-top: 20px;
         }
-        
+
         .empty-message {
             text-align: center;
             padding: 30px;
-            color: #666;
             font-style: italic;
         }
     </style>
 </head>
 <body>
+<center>
     <h1>mbe evidence question bank</h1>
     <p class="subtitle">made by grace kantrow</p>
-    
-    <div id="statusBar" class="status-bar" style="display: none;"></div>
-    
+
     <div class="container">
         <!-- Navigation -->
         <div class="nav">
             <button class="nav-btn active" onclick="switchMode('quiz')">quiz mode</button>
             <button class="nav-btn" onclick="switchMode('library')">library</button>
         </div>
-        
+
         <!-- QUIZ MODE -->
         <div id="quizMode">
             <div class="quiz-header">
                 <div class="quiz-progress">practice test</div>
-                <p style="margin: 15px 0; color: #666; font-size: 0.95rem;">
-                    <strong>10 randomly generated questions</strong> from the library.<br>
+                <p style="margin: 15px 0; font-size: 0.95rem;">
+                    10 randomly generated questions from the library.<br>
                     <a href="#" onclick="switchMode('library'); return false;">view all questions in the library →</a>
                 </p>
                 <button class="nav-btn" style="margin-top: 15px;" onclick="generateNewQuiz()">generate new quiz</button>
             </div>
-            
+
             <div id="quizQuestionsContainer"></div>
         </div>
-        
+
         <!-- LIBRARY MODE -->
         <div id="libraryMode" class="hidden">
             <h2>question library</h2>
-            
+
             <div class="library-controls">
-                <input 
-                    type="text" 
-                    class="search-box" 
-                    id="searchBox" 
+                <input
+                    type="text"
+                    class="search-box"
+                    id="searchBox"
                     placeholder="search by question, topic, or scenario..."
                     onkeyup="filterLibrary()"
                 >
@@ -637,76 +398,50 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="library-stats" id="libraryStats"></div>
-            
+
             <div id="libraryContainer"></div>
         </div>
-        
+
         <!-- Footer -->
         <div class="footer">
             <p id="totalQuestionsFooter"></p>
             <p style="margin-top: 10px; font-size: 0.8rem;">last updated: december 2025</p>
         </div>
     </div>
-    
+</center>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // Configuration
-        const SHEET_ID = '1WYZ5grBXcYZSXDhozYvHh74HRcvxQfsUXt2twjp7cV8';
-        const SHEET_TAB_ID = '1962900808';
         const CSV_URL = 'https://raw.githubusercontent.com/kombuchauncle/Evidence-MBEs/main/mbe_questions.csv';
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1bt4aADO8QQ8Px6NwLEKt10f4DsyEDBw6L83-x53TyGbu3kgbef_Sbm0v0sP4Q/exec';
-        
-        // State management
+
         let allQuestions = [];
         let currentQuiz = [];
-        let currentQuizIndex = 0;
-        let answeredQuestions = {};
         let libraryFilteredQuestions = [];
-        let sheetsAuthToken = null;
-        
-        // Initialize on load
+
         if (document.readyState !== 'loading') {
             initializeApp();
         } else {
             document.addEventListener('DOMContentLoaded', initializeApp);
         }
-        
+
         async function initializeApp() {
-            console.log('Initializing app...');
-            
-            // Try to authenticate with Google Sheets
-            await authenticateGoogleSheets();
-            
-            // Load questions from CSV
             await loadQuestions();
-            
-            // Set up UI
             updateSourceFilter();
             generateNewQuiz();
             updateFooter();
         }
-        
-        async function authenticateGoogleSheets() {
-            // For now, we'll use a simple approach:
-            // The explanation updates will be batched and sent via a backend service
-            // For this demo, we'll log what would be sent
-            console.log('Google Sheets authentication configured');
-            console.log('Sheet ID:', SHEET_ID);
-        }
-        
+
         async function loadQuestions() {
-            console.log('Loading questions from:', CSV_URL);
-            
             try {
                 const response = await fetch(CSV_URL, {
                     mode: 'cors',
                     headers: { 'Accept': 'text/csv' }
                 });
-                
+
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const csv = await response.text();
                 return new Promise((resolve) => {
                     Papa.parse(csv, {
@@ -714,24 +449,20 @@
                         skipEmptyLines: true,
                         complete: function(results) {
                             allQuestions = results.data.filter(q => q.Question && q.Question.trim());
-                            console.log('✓ Loaded', allQuestions.length, 'questions');
                             resolve();
                         },
                         error: function(err) {
-                            console.error('Parse error:', err);
                             loadSampleData();
                             resolve();
                         }
                     });
                 });
             } catch (err) {
-                console.error('Fetch error:', err);
                 loadSampleData();
             }
         }
-        
+
         function loadSampleData() {
-            console.log('Loading sample data...');
             allQuestions = [
                 {
                     Question: "Should the judge grant a motion to strike the medical examiner's testimony?",
@@ -756,16 +487,15 @@
                     Source: "In-Class MBE"
                 }
             ];
-            console.log('✓ Sample data loaded');
         }
-        
+
         function updateSourceFilter() {
             const sources = [...new Set(allQuestions.map(q => q.Source).filter(Boolean))];
             const filterSelect = document.getElementById('sourceFilter');
             filterSelect.innerHTML = '<option value="">all sources</option>' +
                 sources.map(s => `<option value="${s}">${s}</option>`).join('');
         }
-        
+
         function generateNewQuiz() {
             // Shuffle all questions randomly (true random, no prioritization)
             const shuffled = allQuestions.map(q => ({...q}));
@@ -773,22 +503,22 @@
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-            
+
             currentQuiz = shuffled.slice(0, Math.min(10, shuffled.length));
             displayAllQuestions();
         }
-        
+
         function displayAllQuestions() {
             const container = document.getElementById('quizQuestionsContainer');
-            
+
             if (currentQuiz.length === 0) {
-                container.innerHTML = '<p class="center-text">No questions available</p>';
+                container.innerHTML = '<p class="center-text">no questions available</p>';
                 return;
             }
-            
+
             const html = currentQuiz.map((q, idx) => `
                 <div class="quiz-question-card">
-                    <div class="quiz-q-number">Question ${idx + 1} of ${currentQuiz.length}</div>
+                    <div class="quiz-q-number"><b><i>question ${idx + 1} of ${currentQuiz.length}</i></b></div>
                     ${q.Scenario ? `<div class="quiz-q-scenario">${q.Scenario}</div>` : ''}
                     <div class="quiz-q-text">${q.Question}</div>
                     <div class="quiz-q-choices">
@@ -798,244 +528,58 @@
                         <div class="quiz-q-choice"><strong>d.</strong> ${q.Choice_D}</div>
                     </div>
                     <button class="quiz-show-answer-btn" onclick="toggleQuizAnswer(this)">show answer</button>
-                    <div class="quiz-answer-reveal" data-question="${idx}">
-                        <div class="quiz-answer-label">answer: <span style="color: #551a8b;">${q.Correct_Answer}</span></div>
-                        ${q.Explanation ? `<div style="margin-top: 10px;"><strong>explanation:</strong> ${q.Explanation}</div>` : ''}
-                        ${q.Topic ? `<div style="margin-top: 10px;"><strong>topic:</strong> ${q.Topic}</div>` : ''}
-                        ${q.Source ? `<div style="margin-top: 10px;"><strong>source:</strong> ${q.Source}</div>` : ''}
-                    </div>
-                    
-                    <!-- EXPLANATION INPUT SECTION -->
-                    <div class="explanation-input-section">
-                        <div class="explanation-input-label">topic:</div>
-                        <input 
-                            type="text" 
-                            class="explanation-input topic-input" 
-                            id="topic-input-${idx}"
-                            placeholder="e.g., Hearsay, Relevance, Character Evidence..."
-                            data-question-index="${idx}"
-                        >
-                        <div class="explanation-input-label" style="margin-top: 15px;">add your explanation:</div>
-                        <textarea 
-                            class="explanation-input" 
-                            id="explanation-input-${idx}"
-                            placeholder="Write your own explanation or notes for this question..."
-                            data-question-index="${idx}"
-                        >${q.UserExplanation || ''}</textarea>
-                        <button 
-                            class="explanation-save-btn" 
-                            onclick="saveExplanation(${idx})"
-                        >save to sheets</button>
-                        <span class="save-indicator" id="save-indicator-${idx}"></span>
+                    <div class="quiz-answer-reveal">
+                        <div class="quiz-answer-label">answer: ${q.Correct_Answer}</div>
+                        ${q.Explanation ? `<div style="margin-top: 10px;"><b><i>explanation:</i></b> ${q.Explanation}</div>` : ''}
+                        ${q.Topic ? `<div style="margin-top: 10px;"><b><i>topic:</i></b> ${q.Topic}</div>` : ''}
+                        ${q.Source ? `<div style="margin-top: 10px;"><b><i>source:</i></b> ${q.Source}</div>` : ''}
                     </div>
                 </div>
             `).join('');
-            
+
             container.innerHTML = html;
         }
-        
+
         function toggleQuizAnswer(btn) {
             const answerDiv = btn.nextElementSibling;
             answerDiv.classList.toggle('visible');
             btn.textContent = answerDiv.classList.contains('visible') ? 'hide answer' : 'show answer';
         }
-        
-        async function saveExplanation(questionIndex) {
-            const topicInput = document.getElementById(`topic-input-${questionIndex}`);
-            const textarea = document.getElementById(`explanation-input-${questionIndex}`);
-            const topic = topicInput.value.trim();
-            const explanation = textarea.value.trim();
-            const question = currentQuiz[questionIndex];
-            const indicator = document.getElementById(`save-indicator-${questionIndex}`);
-            const btn = textarea.nextElementSibling;
-            
-            // Allow saving if either topic OR explanation is provided
-            if (!explanation && !topic) {
-                showStatus('Please write a topic or explanation before saving', 'error');
-                return;
-            }
-            
-            // Show saving state
-            btn.classList.add('saving');
-            btn.disabled = true;
-            indicator.textContent = 'saving...';
-            indicator.classList.add('saving');
-            
-            try {
-                // Send to Google Sheets via our backend
-                const result = await updateGoogleSheet(question, topic, explanation);
-                
-                if (result.success) {
-                    // Update UI
-                    indicator.classList.remove('saving');
-                    indicator.classList.add('saved');
-                    indicator.textContent = '✓ saved to sheets';
-                    
-                    // Save locally too
-                    if (explanation) {
-                        question.UserExplanation = explanation;
-                        textarea.disabled = true;
-                    }
-                    if (topic) {
-                        question.UserTopic = topic;
-                        topicInput.disabled = true;
-                    }
-                    
-                    btn.disabled = true;
-                    btn.textContent = 'saved ✓';
-                    
-                    setTimeout(() => {
-                        indicator.classList.remove('saved');
-                        indicator.textContent = '';
-                    }, 3000);
-                    
-                    showStatus(result.message, 'saved');
-                } else {
-                    // Error occurred - only for explanation conflicts
-                    indicator.classList.remove('saving');
-                    indicator.classList.add('error');
-                    indicator.textContent = '✗ explanation exists';
-                    showStatus(result.message, 'error');
-                    
-                    // If only topic was being saved, still allow it to be disabled
-                    if (topic && !explanation) {
-                        topicInput.disabled = true;
-                        indicator.classList.remove('error');
-                        indicator.classList.add('saved');
-                        indicator.textContent = '✓ topic saved';
-                        showStatus('Topic saved successfully', 'saved');
-                    }
-                    
-                    setTimeout(() => {
-                        indicator.classList.remove('error');
-                        indicator.classList.remove('saved');
-                        indicator.textContent = '';
-                    }, 4000);
-                }
-            } catch (err) {
-                console.error('Error saving:', err);
-                indicator.classList.remove('saving');
-                indicator.classList.add('error');
-                indicator.textContent = '✗ save failed';
-                showStatus('Error saving explanation. Please try again.', 'error');
-                
-                setTimeout(() => {
-                    indicator.classList.remove('error');
-                    indicator.textContent = '';
-                }, 3000);
-            } finally {
-                btn.classList.remove('saving');
-                btn.disabled = false;
-            }
-        }
-        
-        async function updateGoogleSheet(question, topic, explanation) {
-            console.log('Saving to Google Sheets via Apps Script...');
-            console.log('Question:', question.Question.substring(0, 100));
-            console.log('Scenario:', question.Scenario ? question.Scenario.substring(0, 100) : 'none');
-            console.log('Topic:', topic);
-            console.log('Explanation:', explanation.substring(0, 100));
-            
-            try {
-                // Create JSON payload but send as text/plain to avoid CORS preflight
-                const payload = JSON.stringify({
-                    question: question.Question,
-                    scenario: question.Scenario || '',
-                    topic: topic,
-                    explanation: explanation
-                });
-                
-                console.log('Payload:', payload.substring(0, 150));
-                
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    body: payload,
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    }
-                });
-                
-                // Get the response as text
-                const responseText = await response.text();
-                console.log('Raw response from Apps Script:', responseText);
-                
-                // Parse the simple text response
-                let result;
-                if (responseText === 'ok') {
-                    result = {
-                        success: true,
-                        message: 'Data saved successfully'
-                    };
-                } else if (responseText.startsWith('error:')) {
-                    result = {
-                        success: false,
-                        message: responseText.substring(7) // Remove "error: " prefix
-                    };
-                } else {
-                    result = {
-                        success: false,
-                        message: 'Unknown response: ' + responseText
-                    };
-                }
-                
-                console.log('Parsed response:', result);
-                return result;
-                
-            } catch (err) {
-                console.error('Error sending to Apps Script:', err);
-                return {
-                    success: false,
-                    message: 'Network error: ' + err.message
-                };
-            }
-        }
-        
-        function showStatus(message, type) {
-            const statusBar = document.getElementById('statusBar');
-            statusBar.textContent = message;
-            statusBar.className = `status-bar ${type}`;
-            statusBar.style.display = 'block';
-            
-            setTimeout(() => {
-                statusBar.style.display = 'none';
-            }, 4000);
-        }
-        
+
         // Library Mode
         function filterLibrary() {
             const search = document.getElementById('searchBox').value.toLowerCase();
             const sourceFilter = document.getElementById('sourceFilter').value;
-            
+
             libraryFilteredQuestions = allQuestions.filter(q => {
-                const matchesSearch = !search || 
+                const matchesSearch = !search ||
                     (q.Question && q.Question.toLowerCase().includes(search)) ||
                     (q.Scenario && q.Scenario.toLowerCase().includes(search)) ||
                     (q.Source && q.Source.toLowerCase().includes(search));
-                
+
                 const matchesSource = !sourceFilter || q.Source === sourceFilter;
-                
+
                 return matchesSearch && matchesSource;
             });
-            
+
             renderLibrary();
         }
-        
+
         function renderLibrary() {
             const container = document.getElementById('libraryContainer');
-            
+
             if (libraryFilteredQuestions.length === 0) {
                 container.innerHTML = '<div class="empty-message">no questions match your search</div>';
-                document.getElementById('libraryStats').innerHTML = 'No results';
+                document.getElementById('libraryStats').innerHTML = 'no results';
                 return;
             }
-            
+
             const html = libraryFilteredQuestions.map((q, idx) => `
                 <div class="question-card">
                     <div class="question-card-header" onclick="toggleLibraryQuestion(this)">
                         <div>
                             <div class="question-card-title">${q.Question}</div>
-                            <div class="question-card-meta">${q.Source || 'Unknown Source'}</div>
+                            <div class="question-card-meta">${q.Source || ''}</div>
                         </div>
                         <div class="expand-icon">▼</div>
                     </div>
@@ -1055,16 +599,16 @@
                     </div>
                 </div>
             `).join('');
-            
+
             container.innerHTML = html;
-            document.getElementById('libraryStats').innerHTML = 
+            document.getElementById('libraryStats').innerHTML =
                 `showing ${libraryFilteredQuestions.length} of ${allQuestions.length} questions`;
         }
-        
+
         function toggleLibraryQuestion(header) {
             const card = header.closest('.question-card');
             card.classList.toggle('expanded');
-            
+
             if (!card.classList.contains('expanded')) {
                 const answerDiv = card.querySelector('.card-answer');
                 const btn = card.querySelector('.show-answer-btn');
@@ -1072,12 +616,12 @@
                 btn.textContent = 'show answer';
             }
         }
-        
+
         function toggleLibraryAnswer(event) {
             event.stopPropagation();
             const btn = event.target;
             const answerDiv = btn.nextElementSibling;
-            
+
             if (answerDiv.style.display === 'none') {
                 answerDiv.style.display = 'block';
                 btn.textContent = 'hide answer';
@@ -1086,14 +630,14 @@
                 btn.textContent = 'show answer';
             }
         }
-        
+
         function switchMode(mode) {
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             document.getElementById('quizMode').classList.add('hidden');
             document.getElementById('libraryMode').classList.add('hidden');
-            
+
             if (mode === 'quiz') {
                 document.getElementById('quizMode').classList.remove('hidden');
             } else {
@@ -1101,9 +645,9 @@
                 filterLibrary();
             }
         }
-        
+
         function updateFooter() {
-            document.getElementById('totalQuestionsFooter').innerHTML = 
+            document.getElementById('totalQuestionsFooter').innerHTML =
                 `<strong>${allQuestions.length}</strong> total questions in bank`;
         }
     </script>
